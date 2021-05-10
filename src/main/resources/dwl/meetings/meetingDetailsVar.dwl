@@ -1,7 +1,7 @@
 %dw 2.0
 output application/java  
 ---
-vars."meetings-info" map using (id = $.MeetingId)
+vars."meetings-info" default [] as Array map using (id = $.MeetingId)
   {
     Comments: $.Comments,
     MeetingType: $.MeetingType,
@@ -9,7 +9,7 @@ vars."meetings-info" map using (id = $.MeetingId)
     MeetingId: $.MeetingId,
     UtcDateTime: $.UtcDateTime,
     Duration: $.Duration,
-    RelatedDocuments: (vars."meetings-document-detail" filter ($.*LinkedId contains id) map {
+    RelatedDocuments: (vars."meetings-document-detail" default [] as Array filter ($.*LinkedId contains id) map {
       UploadedUtcDateTime: $.UploadedUtcDateTime,
       Title: $.Title,
       DateTag: $.DateTag,
@@ -20,7 +20,7 @@ vars."meetings-info" map using (id = $.MeetingId)
       PhysicalFileName: $.PhysicalFileName,
       DocumentDetailsId: $.Id
     }),
-    agendaItems: (vars."agenda-items-info" filter ($.*MeetingId contains id) map using (agendaId = $.Id)
+    agendaItems: (vars."agenda-items-info" default [] as Array filter ($.*MeetingId contains id) map using (agendaId = $.Id)
       {
         OrderIndex: $.OrderIndex,
         Title: $.Title,
@@ -28,7 +28,7 @@ vars."meetings-info" map using (id = $.MeetingId)
         Presenters: $.Presenters,
         Duration: $.Duration,
         Id: $.Id,
-        RelatedDocuments: (vars."agenda-items-document-detail" filter ($.*LinkedId contains agendaId) map {
+        RelatedDocuments: (vars."agenda-items-document-detail" default [] as Array filter ($.*LinkedId contains agendaId) map {
           UploadedUtcDateTime: $.UploadedUtcDateTime,
           Title: $.Title,
           DateTag: $.DateTag,

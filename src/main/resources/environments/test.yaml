@@ -1,6 +1,6 @@
 # API Configuration
 api:
-    id: "16285298"
+    id: "16848514"
     ver: "v1"
     application:
         name: "s-company-events-api"

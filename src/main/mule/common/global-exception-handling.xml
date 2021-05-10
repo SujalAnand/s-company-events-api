@@ -92,7 +92,7 @@ output application/json
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a9329e34-3f79-4192-9e5e-1e0d0075c4ef" type="ANY" >
 			<ee:transform doc:name="Error Response" doc:id="2ef930cd-44b3-4aa9-b643-c8f3256530a3" >
 				<ee:message >
-					<ee:set-payload resource="dwl/logging/errorResponse.dwl" />
+					<ee:set-payload resource="dwl/common/errorResponse.dwl" />
 				</ee:message>
 				<ee:variables >
 				</ee:variables>

@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
         </db:mssql-connection>
 	</db:config>
 	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="f4fa5484-eef2-46f4-a163-7d73dccda2af" name="api-config" api="api\api.raml" />
-	<api-gateway:autodiscovery apiId="16285298" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="a64653c7-845c-433f-9bdf-e5c3a4e27aa5" flowRef="api-main" />
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="a64653c7-845c-433f-9bdf-e5c3a4e27aa5" flowRef="api-main" />
 	<configuration-properties doc:name="Configuration properties" doc:id="29b9dcf4-bec4-4d2a-a8fc-cf3a8262b8d2" file="environments/${mule.env}.yaml" />
 	<configuration-properties doc:name="Configuration properties" doc:id="9129e55d-7d2e-4189-8c78-9745558204c8" file="common-config.yaml" />
 <!--     <flow name="loggingFlow">

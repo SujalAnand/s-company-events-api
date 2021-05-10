@@ -10,8 +10,9 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 				<ee:transform doc:name="generate output">
                     <!--Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.-->
                     <ee:variables>
-						<ee:set-variable resource="dwl/logging/outputResultCopy.dwl" variableName="outputResult" />
-                    </ee:variables>
+						<ee:set-variable resource="dwl/common/outputResultCopy.dwl" variableName="outputResult" />
+                    
+</ee:variables>
                 </ee:transform>
             </when>
             <when expression="#[vars.path.value == 'EMPTY']">
@@ -19,8 +20,9 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 				<ee:transform doc:name="generate no results output">
                     <!--Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.-->
                     <ee:variables>
-						<ee:set-variable resource="dwl/logging/outputResultEmpty.dwl" variableName="outputResult" />
-                    </ee:variables>
+						<ee:set-variable resource="dwl/common/outputResultEmpty.dwl" variableName="outputResult" />
+                    
+</ee:variables>
                 </ee:transform>
             </when>
             <otherwise>
@@ -28,21 +30,23 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
                 <ee:transform doc:name="generate 500 output">
                     <!--Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.-->
                     <ee:variables>
-						<ee:set-variable resource="dwl/logging/outputResult.dwl" variableName="outputResult" />
-                    </ee:variables>
+						<ee:set-variable resource="dwl/common/outputResult.dwl" variableName="outputResult" />
+                    
+</ee:variables>
                 </ee:transform>
             </otherwise>
         </choice>
 	</sub-flow>
 	<flow name="common-response-flow">
-        <set-payload value="#[vars.ehSingle]" doc:name="Set Payload" />
+		<set-payload value="#[vars.ehSingle]" doc:name="Set Payload" />
 
         <logger message='#["EH PAYLOAD " : payload.results]' level="DEBUG" doc:name="log eh results" category="s-company-events-api"/>
 		<set-variable variableName="emptyResults" value="#[((isEmpty(payload.results)) or (sizeOf(payload.results) == 0) default true)]" doc:name="set emptyResults" />
 		<ee:transform doc:name="set path">
             <ee:variables>
-				<ee:set-variable resource="dwl/logging/path.dwl" variableName="path" />
-            </ee:variables>
+				<ee:set-variable resource="dwl/common/path.dwl" variableName="path" />
+            
+</ee:variables>
         </ee:transform>
 
         <logger message='#["Error Handling vars: $(vars)"]' level="DEBUG" doc:name="log vars" category="s-company-events-api"/>

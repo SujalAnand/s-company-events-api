@@ -63,7 +63,7 @@ payload.resultSet1</ee:set-variable>
             </ee:variables>
         </ee:transform>
         <set-variable variableName="outputList" value="#[[] as Array]" doc:name="outputList var" />
-        <foreach collection="#[vars.'agenda-items-info']" doc:name="For Each">
+        <foreach collection="#[vars.'agenda-items-info' default [] as Array]" doc:name="For Each">
             <flow-ref name="get-agenda-item-documents" doc:name="get-agenda-item-documents" />
         </foreach>
         <set-variable variableName="outputList" value="#[vars.outputList]" mimeType="application/java" doc:name="outputList var"/>

@@ -11,7 +11,7 @@
 			<ee:variables >
 				<ee:set-variable variableName="appName" ><![CDATA[vars.appName]]></ee:set-variable>
 				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
-				<ee:set-variable variableName="calendarId" ><![CDATA[attributes.uriParams.calendarId default '' as String]]></ee:set-variable>
+				<ee:set-variable variableName="calendarId" ><![CDATA[vars.calendarId]]></ee:set-variable>
 				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>

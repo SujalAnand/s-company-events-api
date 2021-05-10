@@ -1,9 +1,9 @@
 %dw 2.0
 output application/json
 var exception = {
-code: error.muleMessage.attributes.StatusCode,
-info: error.errorType.namespace default "" as String ++ " : " ++ error.errorType.identifier default "" as String, 
-message: error.detailedDescription default '' as String
+	code: error.muleMessage.attributes.StatusCode,
+	info: error.errorType.namespace default "" as String ++ " : " ++ error.errorType.identifier default "" as String, 
+	message: error.detailedDescription default '' as String
 }
 ---
 {
