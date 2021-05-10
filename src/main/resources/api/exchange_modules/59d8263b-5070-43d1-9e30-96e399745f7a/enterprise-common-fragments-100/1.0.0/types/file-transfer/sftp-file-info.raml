@@ -1,0 +1,32 @@
+#%RAML 1.0 DataType
+uses:
+  tdoLib: 0-tdo-library.raml
+description: details about the file(s)
+type: object
+additionalProperties: false
+properties:
+  host:
+    description: The host name of SFTP server to which a connection would be initiated by the File Transfer Service 
+    type: string
+    required: true
+  port:
+    description: The post number of SFTP server to which a connection would be initiated by the File Transfer Service 
+    type: number
+    required: true
+    default: 22
+  user:
+    description: The account name using which a connection would be initiated to the SFTP Server by the File Transfer Service. 
+    type: string
+    required: true
+  password:
+    description: The password to be used with the user account to authenticate with the SFTP Server by the File Transfer Service. This is optional and will only be required when the SFTP Server requires both an SSH Key and the password is required to authenticate. Authentication with password ONLY is not supported
+    type: string
+    required: false
+  credentials:
+    description: The credentials can be either passphrase for a user's locally stored SSH Key or the private SSH Key of the user to be used for authenticating with the SFTP Server 
+    type: tdoLib.CredentialsPassphraseType | tdoLib.CredentialsSSHPrivateKeyType
+    required: false
+  path:
+    description: The absolute path or the relative path (from the home directory of the account used to intiate the connection by the File Transfer Service) of the directory where the files needs to be transferred from/ to
+    type: string
+    required: true

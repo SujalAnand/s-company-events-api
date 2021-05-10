@@ -1,0 +1,10 @@
+#%RAML 1.0 ResourceType
+uses:
+  main: 0-main-resourcetype.raml
+get:
+  is : [ main.common-http-headers, main.common-error-handling : { apiShortName: <<apiShortName>>, apiParentResourceName: <<apiParentResourceName>>, apiResourceName: <<apiResourceName>>, apiMethodName: <<apiMethodName>> } ]
+  responses:
+        200:
+          body:
+            application/json:
+              example: { "status" : "ok" }

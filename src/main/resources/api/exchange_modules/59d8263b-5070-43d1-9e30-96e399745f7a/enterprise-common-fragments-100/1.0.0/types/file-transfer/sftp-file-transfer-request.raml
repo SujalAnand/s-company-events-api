@@ -1,0 +1,24 @@
+#%RAML 1.0 DataType
+displayName: SFTP File Transfer Request Type
+description: The SFTP File Transfer Request Type with the details on the SFTP transfer having information on the source and target system hostnames, ports, files name/patterns, directories etc 
+additionalProperties: false
+type: object
+properties:
+  source: 
+    description: The source system details from which the file needs to be transferred
+    type: !include sftp-file-info.raml
+    required: true
+    properties:
+      name:
+        description: The name of the file or the pattern in case of multiple files which needs to be transferred to/ from. For source systems, the name is mandatory and if also specified for the destination system the file will be renamed. The pattern can only be used to filter the files to be transferred from the source system. If a pattern is specified along with a name for destinations an additional counter will be appended to the name to prevent overwritting the files with the same name
+        type: string
+        required: true
+  destination: 
+    description: The destination system details to which the file needs to be transferred
+    type: !include sftp-file-info.raml
+    required: true
+  overwrite: 
+    description: The flag to indicate whether to overwrite the file in the destination if the same file already exists. The default is false which means that the file will not be overwritten but instead a new file will be created with a running sequence number
+    type: boolean
+    required: true
+    default: false

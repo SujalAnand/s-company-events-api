@@ -1,0 +1,41 @@
+#%RAML 1.0 Trait
+usage: Apply this trait to each API so that it has a transaction id and other autdit information to log and trace its flow within the enterprise
+headers:
+  x-api-transaction-id:
+    description: A GUID passed by the clients to uniquely identify each API request
+    example: s758affv8v-acjnjs7as-najcnj7-akjbjv
+    required: false
+  x-api-correlation-id:
+    description: A GUID passed by the clients to each of the multiple API requests originating from the same group
+    example: s758affv8v-acjnjs7as-najcnj7-akjbjv
+    required: false
+  x-api-source-system:
+    description:  The system from where the request is being originated
+    example: PSD2API
+    required: true
+  x-api-source-user:
+    description:  The user in the source system from who is originating the request (if applicable)
+    required: false
+responses:
+  200:
+    description: Successful Request
+    headers:
+      x-api-transaction-id:
+        description: A GUID passed by the clients to uniquely identify each API request
+        example: s758affv8v-acjnjs7as-najcnj7-akjbjv
+        required: false
+      x-api-correlation-id:
+        description: A GUID passed by the clients to each of the multiple API requests originating from the same group
+        example: s758affv8v-acjnjs7as-najcnj7-akjbjv
+        required: false
+      x-api-responding-system:
+        description:  The system from where the request is being originated
+        required: false
+      x-api-source-user:
+        description:  The user in the source system from who is originating the request (if applicable)
+        required: false
+      Content-Type:
+        description: The Content-Type of the Response Body e.g application/json or application/xml
+        required: false
+        
+      

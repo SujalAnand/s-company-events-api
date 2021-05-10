@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <flow name="update-calendar-entry-by-id-flow">
+
+        <logger message="#[payload]" level="INFO" doc:name="Log Payload" />
+
+        <ee:transform doc:name="Initialise vars" doc:id="868364ad-a641-4a86-b679-19e5f59cd2f5" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="appName" ><![CDATA[vars.appName]]></ee:set-variable>
+				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
+				<ee:set-variable variableName="calendarId" ><![CDATA[vars.calendarId]]></ee:set-variable>
+				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
+			<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CALL UpdateCalendarEntryById"><db:sql><![CDATA[{ CALL UpdateCalendarEntryById(:operatingUserId, :appName, :CalendarEntryId, :Title, :Duration, :DateTimeUtc, :Comments, :CalendarEntryType) }]]></db:sql>
+                <db:parameter-types>
+                    <db:parameter-type key="Duration" type="INTEGER" />
+                    <db:parameter-type key="CalendarEntryId" type="INTEGER" />
+                </db:parameter-types>
+                <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'Title' : vars.originalPayload.Title, 'Duration' : vars.originalPayload.Duration, 'Comments' : vars.originalPayload.Comments, 'CalendarEntryType' : vars.originalPayload.CalendarEntryType, 'DateTimeUtc' : vars.originalPayload.DateTimeUtc, 'CalendarEntryId' : vars.calendarId}]]]></db:input-parameters>
+            </db:stored-procedure>
+        </try>
+
+        <logger level="INFO" doc:name="Log DB Output" doc:id="92adc5a6-e422-47d5-a054-b30330447498" message="#[%dw 2.0
+output application/json
+---
+payload]"/>
+		<set-variable variableName="output" value="#[payload]" doc:name="set output" />
+
+        <ee:transform doc:name="success map error handling">
+            <ee:variables>
+				<ee:set-variable resource="dwl/calendar/updateCalendarById.dwl" variableName="ehSingle" />
+            </ee:variables>
+        </ee:transform>
+
+    </flow>
+
+</mule>

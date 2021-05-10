@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <flow name="create-kpi-flow">
+
+        <ee:transform doc:name="Initialise vars" doc:id="42cfaacf-f5c4-45ad-bb1d-984c342ac1a4" >
+			<ee:variables >
+				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
+				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
+				<ee:set-variable variableName="appName" ><![CDATA[vars.appName]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
+            <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CreateKpi">
+               <db:sql><![CDATA[{ CALL CreateKpi(:operatingUserId, :appName, :KpiType, :ModelLineName, :DateUtc, :Comments, :KpiId) }]]></db:sql>
+                <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'ModelLineName' : vars.originalPayload.ModelLineName, 'DateUtc' : vars.originalPayload.UtcDate, 'Comments' : vars.originalPayload.Comment, 'KpiType' : vars.originalPayload.KpiType}]]]></db:input-parameters>
+				<db:output-parameters>
+                    <db:output-parameter key="KpiId" type="INTEGER"/>
+                </db:output-parameters>
+            </db:stored-procedure>
+        </try>
+
+        <set-variable value="#[payload.KpiId]" doc:name="Set output" doc:id="6987f8cf-2ba7-47cb-90e7-2a48da29ffb3" variableName="output"/>
+
+        <ee:transform doc:name="success map error handling">
+            <ee:variables>
+				<ee:set-variable resource="dwl/kpi/createKpiResponse.dwl" variableName="ehSingle" />
+            </ee:variables>
+        </ee:transform>
+
+        <ee:transform doc:name="Initialise audit info vars" doc:id="65dccf37-2f13-40db-b088-6897e1e3d758" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="methodVerb" ><![CDATA[attributes.method]]></ee:set-variable>
+				<ee:set-variable variableName="requestPath" ><![CDATA[attributes.requestPath]]></ee:set-variable>
+				<ee:set-variable variableName="queryParams" ><![CDATA[attributes.queryString]]></ee:set-variable>
+				<ee:set-variable variableName="responseStatus" ><![CDATA[200]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+
+        <ee:transform doc:name="audit info var">
+            <ee:variables>
+				<ee:set-variable resource="dwl/kpi/auditInfo.dwl" variableName="auditInfo" />
+            </ee:variables>
+        </ee:transform>
+
+    </flow>
+
+</mule>

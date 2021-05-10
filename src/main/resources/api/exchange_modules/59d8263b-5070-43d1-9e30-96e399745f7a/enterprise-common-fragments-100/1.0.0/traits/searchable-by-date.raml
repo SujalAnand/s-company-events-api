@@ -1,0 +1,11 @@
+#%RAML 1.0 Trait
+usage: Apply this trait to resources which supports datetime range searching
+queryParameters:
+  dateFrom:
+    type: date-only
+    example: "2017-10-02"
+    required: false
+  dateTo:
+    type: date-only
+    example: "2018-10-02"
+    required: false

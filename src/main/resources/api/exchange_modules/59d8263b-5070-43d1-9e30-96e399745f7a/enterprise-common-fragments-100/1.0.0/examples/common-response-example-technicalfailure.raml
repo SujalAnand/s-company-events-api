@@ -1,0 +1,12 @@
+#%RAML 1.0 NamedExample
+common-response-example-technicalfailure:
+  "api": "Fraud API"
+  "uri": "/fraud"
+  "timestamp": "2000-01-01T00:00:00.0Z"
+  "code": "ERR-123"
+  "type": "CRITICAL"
+  "summary": "A communication error occured"
+  "additionalInformation":
+    "type": "Text"
+    "details": 
+      "mqerror": "An MQ message to the destination could not be sent as the host is unavailable"

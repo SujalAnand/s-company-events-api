@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+    
+	<sub-flow name="generate-output-logic-sub-flow" doc:id="e6d202e2-f6c7-4ded-ba26-f6d30e6dfa2e" >
+		<choice doc:name="check ehSingle.httpCode">
+            <when expression="#[vars.path.value == 'COPY']">
+                <set-variable value="#[vars.ehSingle.httpCode]" doc:name="httpStatus" doc:id="0d7eaa46-d899-4efd-98f0-a57c9b02e2e4" variableName="httpStatus" />
+				<ee:transform doc:name="generate output">
+                    <!--Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.-->
+                    <ee:variables>
+						<ee:set-variable resource="dwl/logging/outputResultCopy.dwl" variableName="outputResult" />
+                    </ee:variables>
+                </ee:transform>
+            </when>
+            <when expression="#[vars.path.value == 'EMPTY']">
+                <set-variable value="200" doc:name="httpStatus" doc:id="b2c1aa60-99f6-42d2-988c-42de645a24f4" variableName="httpStatus" />
+				<ee:transform doc:name="generate no results output">
+                    <!--Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.-->
+                    <ee:variables>
+						<ee:set-variable resource="dwl/logging/outputResultEmpty.dwl" variableName="outputResult" />
+                    </ee:variables>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-variable value="500" doc:name="httpStatus" doc:id="44b8403f-bf2e-47d9-8852-5ecd3dd0c9af" variableName="httpStatus" />
+                <ee:transform doc:name="generate 500 output">
+                    <!--Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.-->
+                    <ee:variables>
+						<ee:set-variable resource="dwl/logging/outputResult.dwl" variableName="outputResult" />
+                    </ee:variables>
+                </ee:transform>
+            </otherwise>
+        </choice>
+	</sub-flow>
+	<flow name="errorHandling:single-response-payload">
+        <set-payload value="#[vars.ehSingle]" doc:name="Set Payload" />
+
+        <logger message='#["EH PAYLOAD " : payload.results]' level="DEBUG" doc:name="log eh results" />
+		<set-variable variableName="emptyResults" value="#[((isEmpty(payload.results)) or (sizeOf(payload.results) == 0) default true)]" doc:name="set emptyResults" />
+		<ee:transform doc:name="set path">
+            <ee:variables>
+				<ee:set-variable resource="dwl/logging/path.dwl" variableName="path" />
+            </ee:variables>
+        </ee:transform>
+
+        <logger message='#["Error Handling vars: $(vars)"]' level="DEBUG" doc:name="log vars" />
+
+        <flow-ref doc:name="Ref: output-logic Sub Flow" doc:id="4b1efcdf-25cd-47fb-8b43-a662a660ed2d" name="generate-output-logic-sub-flow" />
+		<set-payload value="#[vars.outputResult]" doc:name="set Payload" encoding="UTF-8" mimeType="application/json" />
+
+       <!--  <error-handler ref="api-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy" /> -->
+
+    </flow>
+
+<!--     <flow name="errorHandling:multi-response-payload"> -->
+<!--         <choice doc:name="check http.status flowVar"> -->
+<!--             <when expression="#[sessionVars.errorHandling.size == 0]"> -->
+<!--                 <compatibility:set-property propertyName="http.status" value="500" doc:name="set http.status 500 property"> -->
+<!--                     Migration WARN: Instead of using outbound properties in the flow, move the expression that sets the property into the XML attribute (such as 'method') of the operation or listener that accepts the expression. -->
+<!--                        For more information refer to: -->
+<!--                            * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#outbound_properties -->
+<!--                 </compatibility:set-property> -->
+<!--                 <compatibility:set-session-variable variableName="errorHandling" value="#[vars.errorHandling]" mimeType="application/json"> -->
+<!--                     Migration WARN: Instead of setting session variables in the flow, you must set Mule 4 variables. -->
+<!--                        For more information refer to: -->
+<!--                            * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#session_variables -->
+<!--                 </compatibility:set-session-variable> -->
+<!--                 <ee:transform doc:name="generate 500 output"> -->
+<!--                     Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7. -->
+<!--                     <ee:variables> -->
+<!--                         <ee:set-variable variableName="outputResult"><![CDATA[%dw 2.0 -->
+<!-- output application/json   -->
+<!-- -&#45;&#45; -->
+<!-- [ -->
+<!--   { -->
+<!--     nativeCodes: { -->
+<!--       nativeCode: -1, -->
+<!--       nativeMessage: "Unknown Error", -->
+<!--       exception: vars.exception -->
+<!--     }, -->
+<!--     results: [] -->
+<!--   } -->
+<!-- ]]]></ee:set-variable> -->
+<!--                     </ee:variables> -->
+<!--                 </ee:transform> -->
+<!--                 <compatibility:set-session-variable variableName="outputResult" value="#[vars.outputResult]"> -->
+<!--                     Migration WARN: Instead of setting session variables in the flow, you must set Mule 4 variables. -->
+<!--                        For more information refer to: -->
+<!--                            * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#session_variables -->
+<!--                 </compatibility:set-session-variable> -->
+<!--             </when> -->
+<!--             <otherwise> -->
+<!--                 <compatibility:set-session-variable variableName="errorHandling" value="#[vars.errorHandling]" mimeType="application/json"> -->
+<!--                     Migration WARN: Instead of setting session variables in the flow, you must set Mule 4 variables. -->
+<!--                        For more information refer to: -->
+<!--                            * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#session_variables -->
+<!--                 </compatibility:set-session-variable> -->
+<!--                 <ee:transform doc:name="Transform Message"> -->
+<!--                     Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7. -->
+<!--                     <ee:variables> -->
+<!--                         <ee:set-variable variableName="http.status">%dw 2.0 -->
+<!-- output application/java   -->
+<!-- -&#45;&#45; -->
+<!-- sessionVars.errorHandling[0].httpCode as String</ee:set-variable> -->
+<!--                     </ee:variables> -->
+<!--                 </ee:transform> -->
+<!--                 <compatibility:set-property propertyName="http.status" value="#[vars.http.status]"> -->
+<!--                     Migration WARN: Instead of setting outbound properties in the flow, you must set Mule 4 variables. -->
+<!--                        For more information refer to: -->
+<!--                            * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#outbound_properties -->
+<!--                 </compatibility:set-property> -->
+<!--                 <compatibility:set-session-variable variableName="errorHandling" value="#[vars.errorHandling]" mimeType="application/json"> -->
+<!--                     Migration WARN: Instead of setting session variables in the flow, you must set Mule 4 variables. -->
+<!--                        For more information refer to: -->
+<!--                            * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#session_variables -->
+<!--                 </compatibility:set-session-variable> -->
+<!--                 <ee:transform doc:name="generate output"> -->
+<!--                     Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7. -->
+<!--                     <ee:variables> -->
+<!--                         <ee:set-variable variableName="outputResult"><![CDATA[%dw 2.0 -->
+<!-- output application/json   -->
+<!-- -&#45;&#45; -->
+<!-- sessionVars.errorHandling map (errorHandling, indexOfErrorHandling) -> { -->
+<!--   nativeCodes: errorHandling.nativeCodes map (nativeCode, indexOfNativeCode) -> { -->
+<!--     nativeCode: nativeCode.nativeCode, -->
+<!--     nativeMessage: nativeCode.nativeMessage -->
+<!--   }, -->
+<!--   (exception: vars.exception) if sessionVars.errorHandling[0].httpCode == 500, -->
+<!--   (results: errorHandling.results map (result, indexOfResult) -> result) if not errorHandling.results == null or errorHandling.results.size > 0 -->
+<!-- }]]></ee:set-variable> -->
+<!--                     </ee:variables> -->
+<!--                 </ee:transform> -->
+<!--                 <compatibility:set-session-variable variableName="outputResult" value="#[vars.outputResult]"> -->
+<!--                     Migration WARN: Instead of setting session variables in the flow, you must set Mule 4 variables. -->
+<!--                        For more information refer to: -->
+<!--                            * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#session_variables -->
+<!--                 </compatibility:set-session-variable> -->
+<!--             </otherwise> -->
+<!--         </choice> -->
+
+<!--         <set-payload value="#[vars.outputResult(1 to -1)]" doc:name="set Payload" mimeType="application/json"> -->
+<!--             Migration WARN: The MEL expression could not be migrated to a DataWeave expression. -->
+<!--                For more information refer to: -->
+<!--                    * https://docs.mulesoft.com/mule-runtime/4.3/migration-mel -->
+<!--                    * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#mel_expressions -->
+<!--                    * https://blogs.mulesoft.com/dev/mule-dev/why-dataweave-main-expression-language-mule-4 -->
+<!--             Migration WARN: The MEL expression contains a method invocation that could not be migrated to a Dataweave expression. -->
+<!--                For more information refer to: -->
+<!--                    * https://docs.mulesoft.com/mule-runtime/4.3/dataweave-cookbook-java-methods -->
+<!--                    * https://docs.mulesoft.com/mule-runtime/4.3/migration-mel -->
+<!--         </set-payload> -->
+
+<!--         <flow-ref name="log:output" doc:name="log:output" /> -->
+
+<!--         <error-handler ref="errorHandling-GlobalChoiceExceptionStrategy" doc:name="Reference Exception Strategy" /> -->
+
+<!--     </flow> -->
+
+<!--     <error-handler name="errorHandling-GlobalChoiceExceptionStrategy">
+        <on-error-continue when="#[Java::isCausedBy(error.cause, 'java.sql.SQLException', false)]" doc:name="Catch SQL Exception Exception Strategy">
+            <set-variable variableName="originalPayload" value="#[payload]" doc:name="save payload" />
+            <set-payload value="#[error]" doc:name="set exception as payload" />
+           </set-payload>
+            <ee:transform doc:name="map exception">
+                Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.
+                <ee:variables>
+					<ee:set-variable resource="dwl/logging/exception.dwl" variableName="exception" />
+                </ee:variables>
+            </ee:transform>
+            <set-payload value="#[vars.originalPayload]" doc:name="reset payload" />
+            <ee:transform doc:name="map error handling">
+                Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.
+                <ee:variables>
+					<ee:set-variable resource="dwl/logging/ehSingle.dwl" variableName="ehSingle" />
+                </ee:variables>
+            </ee:transform>
+            <logger level="INFO" doc:name="Log Error Handling" doc:id="3070c03a-87cb-4468-9263-8da2c91b929b" message="#[vars.ehSingle]"/>
+			<ee:transform doc:name="Clean error handling">
+                Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.
+                <ee:variables>
+					<ee:set-variable resource="dwl/logging/ehSingleClear.dwl" variableName="ehSingle" />
+                </ee:variables>
+            </ee:transform>
+            <remove-variable variableName="exception" doc:name="Delete exception message" />
+        </on-error-continue>
+        <on-error-continue doc:name="Catch all" type="ANY" enableNotifications="true" logException="true">
+            <set-variable variableName="originalPayload" value="#[payload]" doc:name="save payload" />
+            <set-payload value="#[error]" doc:name="set exception as payload" />
+			<ee:transform doc:name="map exception">
+                Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.
+                <ee:variables>
+					<ee:set-variable resource="dwl/logging/exception.dwl" variableName="exception" />
+                </ee:variables>
+            </ee:transform>
+            <set-payload value="#[vars.originalPayload]" doc:name="reset payload" mimeType="application/json"/>
+            <ee:transform doc:name="map error handling">
+                Migration ERROR: Custom types defined in Studio 6 are not migrated to Studio 7.
+                <ee:variables>
+					<ee:set-variable resource="dwl/logging/ehSingle.dwl" variableName="ehSingle" />
+                </ee:variables>
+            </ee:transform>
+            <logger level="INFO" doc:name="Log Error Handling" doc:id="527ead30-10b2-4501-b333-d4654d7a4e05" message="#[vars.ehSingle]"/>
+	</on-error-continue>
+    </error-handler> -->
+
+</mule>

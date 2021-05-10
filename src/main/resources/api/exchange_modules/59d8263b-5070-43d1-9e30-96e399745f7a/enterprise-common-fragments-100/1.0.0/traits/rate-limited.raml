@@ -1,0 +1,21 @@
+#%RAML 1.0 Trait
+usage: Apply this trait to resources which will be rate limited. (Rate Limiting Policy)
+
+responses:
+  200:
+    headers:
+      x-ratelimit-remaining :
+        description:   The remaining number of requests available from the quota.
+      x-ratelimit-limit :
+        description:   The maximum number of requests that can be made within a given window.
+      x-ratelimit-reset :
+        description:   The remaining time, in milliseconds, until a new window starts with the new quota
+  429:
+    description: Too Many Requests. The number of HTTP requests exceeds the SLA limit.
+    headers:
+      x-ratelimit-remaining :
+        description:   The remaining number of requests available from the quota.
+      x-ratelimit-limit :
+        description:   The maximum number of requests that can be made within a given window.
+      x-ratelimit-reset :
+        description:   The remaining time, in milliseconds, until a new window starts with the new quota

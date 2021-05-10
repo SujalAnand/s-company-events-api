@@ -1,0 +1,17 @@
+#%RAML 1.0 NamedExample
+source: 
+  host: "sftp-server-1"
+  port: 2222
+  user: "GFSUSER"
+  password: "Password1"
+  path: "/var/source-data/"
+  name: "mule-2.log"
+destination: 
+  host: "sftp-server-2"
+  port: 2222
+  user: "BLZUSER"
+  password: "Password2"
+  credentials:
+    sshPrivateKey: "asjhdnoqhdouhou2h3b2b343kb4h3v5jhv12h3vbh21v312jv3jg21c4g314"
+  path: "/var/target-data/"
+overwrite: true

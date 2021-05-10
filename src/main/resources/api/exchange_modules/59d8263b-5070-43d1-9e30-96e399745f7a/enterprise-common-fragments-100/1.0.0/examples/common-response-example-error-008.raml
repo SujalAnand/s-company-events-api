@@ -1,0 +1,10 @@
+#%RAML 1.0 NamedExample
+api: "Some API"
+uri: "/api"
+timestamp: "2000-01-01T00:00:00.0Z"
+code: <<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_008
+type: "ERROR"
+summary: "Not Acceptable"
+additionalInformation:
+  type: "Text"
+  details: "The requested media type in the Accept header is not supported by the API"

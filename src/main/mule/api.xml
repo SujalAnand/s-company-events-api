@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:cors="http://www.mulesoft.org/schema/mule/cors" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+    <!--Migration WARN: consoleEnabled property do not exist in Mule 4.-->
+    <!--<apikit:config xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" name="api-config" raml="api.raml" consoleEnabled="false" doc:name="Router" keepRamlBaseUri="false" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />-->
+   
+    <flow name="api-main">
+        <http:listener config-ref="DOMAIN_httpsClientCertV1ListenerConfig" path="${api.http.listener.path}" doc:name="HTTP">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+              <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+
+        <set-variable variableName="bearerToken" value="#[write(attributes.headers.authorization,'text/plain')]" doc:name="bearerToken" />
+		<ee:transform doc:name="decodeJWT" doc:id="3e353ade-6be2-4d1b-a324-f3d1bfb71588" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="decodedBT" ><![CDATA[%dw 2.0
+import fromBase64 from dw::core::Binaries
+output application/json
+var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
+---
+{
+
+    header:read(fromBase64(splitPayload[0]),"application/json"),
+    body:read(fromBase64(splitPayload[1]),"application/json")
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+
+        <logger level="INFO" doc:name="Log authToken" doc:id="ec7f6f24-a9e7-405c-8c10-de7664236dfa" message="auth value : #[vars.decodedBT]" />
+		<apikit:router doc:name="APIkit Router" config-ref="api-config"/>
+
+        <error-handler ref="api-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy" />
+
+    </flow>
+
+    <!--<flow name="api-console">
+        <http:listener config-ref="api-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
+        <apikit:console config-ref="api-config" doc:name="APIkit Console"/>
+    </flow>-->
+    <flow name="delete:\applications\(appName)\users\(employeeId)\userRoles\(roleName):api-config">
+        <flow-ref name="delete-user-role-sub-flow" doc:name="delete-user-role-sub-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\users:api-config">
+        <flow-ref name="get-users-sub-flow" doc:name="get-users-sub-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\appRoles:api-config">
+        <flow-ref name="get-roles-sub-flow" doc:name="get-roles-sub-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\users\(employeeId)\userRoles:api-config">
+        <flow-ref name="get-app-roles-by-user-sub-flow" doc:name="get-app-roles-by-user-sub-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\meeting\(meetingId)\documentdetail\(linkTypeName):api-config" initialState="stopped">
+        <flow-ref name="get-document-detail-by-id-sub-flow" doc:name="get-document-detail-by-id-sub-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\meeting\(meetingId)\agendaItems:api-config" initialState="stopped">
+        <flow-ref name="get-related-agenda-items-sub-flow" doc:name="get-related-agenda-items-sub-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\meeting\(meetingId)\agendaItems\documentdetail\(linkTypeName):api-config" initialState="stopped">
+        <flow-ref name="get-document-detail-by-id-sub-flow" doc:name="get-document-detail-by-id-sub-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\calendar\(calendarId):api-config">
+        <flow-ref name="get-calendar-item-by-id-sub-flow" doc:name="get-calendar-item-by-id-sub-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="delete:\applications\(appName)\document\(unique_name):api-config">
+        <flow-ref name="delete-document-flow" doc:name="delete-document-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\document\(unique_name):api-config">
+        <flow-ref name="get-document-flow" doc:name="get-document-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\modelLines:api-config">
+        <flow-ref name="get-model-lines-sub-flow" doc:name="get-model-lines-sub-flow" />
+
+    </flow>
+
+    <flow name="post:\applications\(appName)\calendar:api-config">
+        <set-variable variableName="logicFlow" value="#['create-calendar-entry-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="post:\applications\(appName)\meeting:api-config">
+        <set-variable variableName="logicFlow" value="#['create-meeting-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="delete:\applications\(appName)\calendar\(calendarId):api-config">
+        <flow-ref name="delete-calendar-item-by-id-sub-flow" doc:name="delete-calendar-item-by-id-sub-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\meeting\byId\(meetingId):api-config">
+        <flow-ref name="get-meeting-by-id-sub-flow" doc:name="get-meeting-by-id-sub-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\calendarTypes:api-config">
+        <flow-ref name="get-calendar-event-types-sub-flow" doc:name="get-calendar-event-types-sub-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\documentTypes:api-config">
+        <flow-ref name="get-document-types-sub-flow" doc:name="get-document-types-sub-flow" />
+
+    </flow>
+
+    <flow name="post:\applications\(appName)\meeting\byId\(meetingId)\agendaItems:api-config">
+        <set-variable variableName="logicFlow" value="#['create-agenda-item-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\meetingTypes:api-config">
+        <flow-ref name="get-meeting-types-flow" doc:name="get-meeting-types-flow" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\kpi\(kpiId):api-config">
+        <flow-ref name="get-kpi-by-id-flow" doc:name="get-kpi-by-id-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="post:\applications\(appName)\kpi:api-config">
+        <set-variable variableName="logicFlow" value="#['create-kpi-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="delete:\applications\(appName)\meeting\byId\(meetingId):api-config">
+        <flow-ref name="delete-meeting-by-id-sub-flow" doc:name="delete-meeting-by-id-sub-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="delete:\applications\(appName)\meeting\byId\(meetingId)\agendaItem\(agendaId):api-config">
+        <flow-ref name="delete-agenda-item-by-id-flow" doc:name="delete-agenda-item-by-id-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\meeting\byDateRange:api-config">
+        <flow-ref name="get-meetings-by-date-range-flow" doc:name="get-meetings-by-date-range-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\document\(unique_name)\documentDetail\(linkTypeName):api-config" initialState="stopped">
+        <flow-ref name="get-document-detail-by-id-sub-flow" doc:name="get-document-detail-by-id-sub-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="put:\applications\(appName)\meeting\byId\(meetingId):api-config">
+        <set-variable variableName="logicFlow" value="#['update-meeting-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="put:\applications\(appName)\kpi\(kpiId):api-config">
+        <set-variable variableName="logicFlow" value="#['update-kpi-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="put:\applications\(appName)\meeting\byId\(meetingId)\agendaItem\(agendaId):api-config">
+        <set-variable variableName="logicFlow" value="#['update-agenda-item-by-id-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="delete:\applications\(appName)\kpi\(kpiId):api-config">
+        <flow-ref name="delete-kpi-by-id-flow" doc:name="delete-kpi-by-id-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="put:\applications\(appName)\calendar\(calendarId):api-config">
+        <set-variable variableName="logicFlow" value="#['update-calendar-entry-by-id-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\calendar\byDateRange:api-config">
+        <flow-ref name="get-calendar-by-date-range-flow" doc:name="get-calendar-by-date-range-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\kpi\byDateRange:api-config">
+        <flow-ref name="get-kpi-by-date-range-flow" doc:name="get-kpi-by-date-range-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="post:\applications\(appName)\document:api-config">
+        <set-variable variableName="logicFlow" value="#['upload-document-flow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\document\(unique_name)\documentDetail:api-config">
+        <flow-ref name="get-lone-doument-detail-by-id-flow" doc:name="get-lone-doument-detail-by-id-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="get:\applications\(appName)\document:api-config">
+        <flow-ref name="filter-documents-flow" doc:name="filter-documents-flow" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+    <flow name="post:\applications\(appName)\users\(employeeId)\userRoles\(roleName):api-config">
+        <set-variable variableName="logicFlow" value="#['add-userFlow']" doc:name="logicFlow" />
+
+        <flow-ref name="router:multi-route" doc:name="router:multi-route" />
+
+        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+
+    </flow>
+
+</mule>

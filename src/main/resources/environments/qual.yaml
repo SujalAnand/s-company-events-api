@@ -1,0 +1,19 @@
+# API Configuration
+api:
+    id: "xx"
+    ver: "v1"
+    application:
+        name: "s-company-events-api"
+    console:
+        enabled: "true"
+    http:
+        listener:
+            path: "/${api.application.name}/${api.ver}/*"
+    name: "groupId:59d8263b-5070-43d1-9e30-96e399745f7a:assetId:s-company-events-api"
+    version: "v1.0:16323475"
+#Database Configuration
+mssql:
+    databaseName: "CompanyEventsQA"
+    instance:
+        name: "SQL_SAC_SEC_DEV"
+    host: "BYMCCRSH0606"

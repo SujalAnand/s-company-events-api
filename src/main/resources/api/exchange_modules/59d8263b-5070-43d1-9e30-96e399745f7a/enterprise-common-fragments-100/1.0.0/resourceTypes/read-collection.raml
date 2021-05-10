@@ -1,0 +1,19 @@
+#%RAML 1.0 ResourceType
+usage: Apply this resource type to any resource that returns a collection of members, and supports creation of a collection of members.
+uses:
+  main: 0-main-resourcetype.raml
+get:
+  is : [ main.common-http-headers, main.common-error-handling : { apiShortName: <<apiShortName>>, apiParentResourceName: <<apiParentResourceName>>, apiResourceName: <<apiResourceName>>, apiMethodName: <<apiMethodName>> } ]
+  description: Returns a collection of <<resourcePathName>>
+  responses:
+    200:
+      body:
+        application/json:
+          type: object
+          displayName: <<resourceCollectionDisplayName>>
+          description: <<resourceCollectionDescription>>
+          properties: 
+            total:
+              type: number
+            <<resourceCollectionName>>: <<resourceCollectionType>>[]
+          examples: <<resourceCollectionExample>>

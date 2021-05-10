@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <sub-flow name="get-calendar-event-types-sub-flow">
+        <ee:transform doc:name="Initialise vars" doc:id="fba54ca6-1f4c-4d9b-a0f2-08e0f2efdbbd" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
+				<ee:set-variable variableName="appName" ><![CDATA[attributes.uriParams.appName]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="Call GetCalendarEventTypes">
+             <db:sql><![CDATA[{ CALL GetCalendarEventTypes(:operatingUserId, :appName) }]]></db:sql>
+            <db:parameter-types>
+                <db:parameter-type key="appName" type="VARCHAR" />
+                <db:parameter-type key="operatingUserId" type="VARCHAR" />
+            </db:parameter-types>
+            <db:input-parameters><![CDATA[#[{'appName' : vars.appName, 'operatingUserId' : vars.operatingUserId}]]]></db:input-parameters>
+        </db:stored-procedure>
+        <logger level="INFO" doc:name="Log DB Output" doc:id="c7f5ada7-065c-437c-8622-714ed34162be" message="#[%dw 2.0
+output application/json
+---
+payload]"/>
+		<ee:transform doc:name="Return Calendar Events Type">
+            <ee:message>
+                <ee:set-payload>%dw 2.0
+output application/json  
+---
+payload.resultSet1</ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </sub-flow>
+
+</mule>

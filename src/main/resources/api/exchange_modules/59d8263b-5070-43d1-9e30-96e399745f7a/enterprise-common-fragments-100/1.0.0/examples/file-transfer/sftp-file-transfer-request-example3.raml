@@ -1,0 +1,15 @@
+#%RAML 1.0 NamedExample
+source: 
+  host: "sftp-server-1"
+  port: 2222
+  user: "GFSUSER"
+  password: "Password1"
+  path: "/var/source-data/"
+  name: "*.log"
+destination: 
+  host: "sftp-server-2"
+  port: 2222
+  user: "BLZUSER"
+  password: "Password2"
+  path: "/var/target-data/"
+overwrite: false

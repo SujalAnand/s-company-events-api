@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <sub-flow name="delete-user-role-sub-flow">
+        <ee:transform doc:name="Initializing Variables" doc:id="85c03a08-1f52-4fe8-ac46-19f49c6d9c6c" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
+				<ee:set-variable variableName="appName" ><![CDATA[attributes.uriParams.appName default "" as String]]></ee:set-variable>
+				<ee:set-variable variableName="employeeId" ><![CDATA[attributes.uriParams.employeeId default "" as String]]></ee:set-variable>
+				<ee:set-variable variableName="roleName" ><![CDATA[attributes.uriParams.roleName default "" as String]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+        <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="Delete role from User">
+           <db:sql><![CDATA[{ CALL RevokeRoleByUserApplication(:operatingUserId, :employeeId, :appName, :roleName) }]]></db:sql>
+            <db:parameter-types>
+                <db:parameter-type key="appName" type="VARCHAR" />
+                <db:parameter-type key="employeeId" type="VARCHAR" />
+                <db:parameter-type key="roleName" type="VARCHAR" />
+                <db:parameter-type key="operatingUserId" type="VARCHAR" />
+            </db:parameter-types>
+            <db:input-parameters><![CDATA[#[{'appName' : vars.appName, 'employeeId' : vars.employeeId, 'roleName' : vars.roleName, 'operatingUserId' : vars.operatingUserId}]]]></db:input-parameters>
+        </db:stored-procedure>
+        <ee:transform doc:name="Return Roles Deleted">
+            <ee:message>
+				<ee:set-payload resource="dwl/roles/delete-user-role.dwl" />
+            </ee:message>
+        </ee:transform>
+    </sub-flow>
+
+</mule>

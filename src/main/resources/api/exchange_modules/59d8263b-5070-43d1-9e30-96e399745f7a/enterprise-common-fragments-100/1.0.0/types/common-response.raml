@@ -1,0 +1,40 @@
+#%RAML 1.0 DataType
+displayName: commonResponse
+description: This is generic common response to an API method invocation and can be used to report technical/ business errors, information where the business transaction has been accepted but not processed and successful where the business transaction has been successfully processed.
+additionalProperties: false
+type: object
+properties:
+  api:
+    type: string
+    description: The name of the API which returned the response
+  uri:
+    type: string
+    description: The URI including query/ uri params for the API from which returned the response
+  timestamp:
+    type: datetime
+    description:  
+  code:
+    type: string
+    required: false
+    description: The unique code for the response
+  type:
+    enum: ["CRITICAL", "ERROR", "WARNING", "INFORMATION", "AUDIT","SUCCESSFUL"]
+    description: The type of the response
+  summary:
+    type: string
+    description: A summary of the response
+  additionalInformation:
+    description: Additional information about the response
+    type: object
+    required: false
+    properties:
+      type:
+        type: string
+        enum: ["Text", "Error", "Exception"]
+        description: "The type of additional information. 
+        Text - Plain text containing additional information response, 
+        Error - Error message containing additional information, 
+        Exception - Exception stack trace containing additional information"
+      details:
+        description: The additional information details as per the type defined 
+        type: any

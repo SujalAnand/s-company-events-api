@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <flow name="loggingFlow">
+        <vm:listener doc:name="VM" queueName="logger" config-ref="VM_Config">
+        </vm:listener>
+
+        <logger message="LOG: #[vars.log_payload]" level="INFO" doc:name="Logger" />
+
+    </flow>
+
+    <sub-flow name="log:output">
+        <ee:transform doc:name="Set log_payload">
+           <ee:variables>
+				<ee:set-variable variableName="log_payload" ><![CDATA[%dw 2.0
+output application/json  
+---
+{
+  msg: "Output",
+  object: payload
+}]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <flow-ref name="loggingFlow" doc:name="loggingFlow" />
+    </sub-flow>
+
+    <sub-flow name="log:input">
+        <set-variable value="#[payload]" doc:name="Save Payload" doc:id="b0e0e3db-c0f9-4bd1-b511-576f75a911bf" variableName="localPayload"/>
+		<ee:transform doc:name="Update Payload/initialise vars" doc:id="85579ad8-b520-47bc-abcf-236265afc50b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[attributes]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="isPayloadNull" ><![CDATA[payload == null]]></ee:set-variable>
+				<ee:set-variable variableName="inProps" ><![CDATA[write(payload) as String]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<set-payload value="#[vars.localPayload]" doc:name="Recover Payload" doc:id="8b8e9480-ffd3-4b1b-a041-3ed2d1d10c5e" />
+		<ee:transform doc:name="Set log_payload" doc:id="2d630635-65c2-42c4-9596-6d1285bfc5af">
+           
+            <ee:variables>
+                <ee:set-variable variableName="log_payload"><![CDATA[%dw 2.0
+output application/json  
+---
+{
+  msg: "Attributes/inbound properties",
+  object: vars.inProps,
+  (text: payload) if vars.isPayloadNull == false
+}]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <flow-ref name="loggingFlow" doc:name="loggingFlow" />
+    </sub-flow>
+
+</mule>

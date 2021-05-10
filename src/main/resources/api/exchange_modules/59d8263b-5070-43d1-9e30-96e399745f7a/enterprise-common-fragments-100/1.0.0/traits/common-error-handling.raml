@@ -1,0 +1,113 @@
+#%RAML 1.0 Trait
+usage: Apply this trait to any API that needs to implement the common error handling
+responses:  
+  400:
+    description: Bad Request. The input parameters or headers have incorrect values or format.
+    body:
+      application/json:
+        type: !include ../types/common-response.raml
+        description: "The following examples covers the scenarios when the API is unable to process the request because of data issues and returns a 400 Bad Request to the clients:<br>
+  eg:<br>
+  Example 1: **<<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_001**<br>
+  This error example is returned when the RAML validation fails in the API Kit router<br>
+  <br>"
+        examples: 
+          <<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_001: !include ../examples/common-response-example-error-001.raml
+  # 401:
+  #   description: Unauthorized. The request couldn't be authenticated by the downstream server.
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  # 403:
+  #   description: Server Access Forbidden. The request couldn't be authenticated by the downstream server.
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  404:
+    description: Not Found. The requested resource cannot be found.
+    body:
+      application/json:
+        type: !include ../types/common-response.raml
+        description: "The following examples covers the scenarios when the API is unable to process the request because the requested resource cannot be found and returns a 404 Not Found to the clients:<br>
+  eg:<br>
+  Example 1: **<<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_003**<br>
+  This error example is returned when the gateway / APIKit router is unable to direct the request to the appropriate resource<br>
+  <br>"
+        examples: 
+          <<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_003: !include ../examples/common-response-example-error-003.raml
+  405:
+    description: Method Not Allowed. The HTTP method used in the request is not supported.
+    body:
+      application/json:
+        type: !include ../types/common-response.raml
+        description: "The following examples covers the scenarios when the API is unable to process the request because the requested operation is not supported on the resource and returns a 405 Method Not Allowed to the clients:<br>
+  eg:<br>
+  Example 1: **<<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_007**<br>
+  This error example is returned when the requested operation is not supported in the RAML and is rejected by the API Kit router<br>
+  <br>"
+        examples: 
+          <<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_007: !include ../examples/common-response-example-error-007.raml
+  406:
+    description: Not Acceptable. The returned content-type is different from the Accept header in the request.
+    body:
+      application/json:
+        type: !include ../types/common-response.raml
+        description: "The following examples covers the scenarios when the API is unable to process the request because the requested media type in the Accept header is not supported by the API implementation and returns a 406 Not Acceptable to the clients:<br>
+  eg:<br>
+  Example 1: **<<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_008**<br>
+  This error example is returned when the requested media type in the Accept Header is not supported in the RAML and is rejected by the API Kit router<br>
+  <br>"
+        examples: 
+          <<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_008: !include ../examples/common-response-example-error-008.raml
+  # 408:
+  #   description: Request Timeout. The server timed out waiting for the request.
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  # 409:
+  #   description: Conflict
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  415:
+    description: Unsupported Media Type. The payload is in a format not supported by this method.
+    body:
+      application/json:
+        type: !include ../types/common-response.raml
+        description: "The following examples covers the scenarios when the API is unable to process the POST/ PATCH/ PUT request because the media type in the Content-Type header is not supported by the API implementation and returns a 415 Unsupported Media Type to the clients:<br>
+  eg:<br>
+  Example 1: **<<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_005**<br>
+  This error example is returned when the media type in the Content-Type Header for POST/ PUT/ PATCH request is not supported in the RAML and is rejected by the API Kit router<br>
+  <br>"
+        examples: 
+          <<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_005: !include ../examples/common-response-example-error-005.raml
+  # 429:
+  #   description: Server Request Rate Limit Exceeded. The number of requests to the downstream server exceeded the limit.
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  # 500:
+  #   description: Internal Server Error. An unexpected internal error occurred
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  # 501:
+  #   description: Not Implemented
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  # 503:
+  #   description: Server Not Available. The connection to the downstream server couldn't be established.
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  # 502:
+  #   description: Bad Gateway
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml
+  # 504:
+  #   description: Gateway Time-out
+  #   body:
+  #     application/json:
+  #       type: !include ../types/common-response.raml

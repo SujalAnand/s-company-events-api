@@ -1,0 +1,20 @@
+#%RAML 1.0 DataType
+displayName: documentDetail
+description: Details of a Document
+#additionalProperties: false
+type: object
+properties:
+  id:
+    type: integer
+  physicalFileName:
+    type: string
+  title:
+    type: string
+  uploadedUtcDateTime:
+    type: datetime-only
+  docuemntTypeId:
+    type: integer
+  documentTypeName:
+    type: string
+  physicalFileRoot:
+    type: string

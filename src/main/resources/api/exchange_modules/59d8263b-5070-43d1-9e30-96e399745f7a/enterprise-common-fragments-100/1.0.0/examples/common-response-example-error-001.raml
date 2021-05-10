@@ -1,0 +1,10 @@
+#%RAML 1.0 NamedExample
+api: "Some API"
+uri: "/api"
+timestamp: "2000-01-01T00:00:00.0Z"
+code: <<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_001
+type: "ERROR"
+summary: "Bad Request"
+additionalInformation:
+  type: "Text"
+  details: "The data found in the request doesn't match with the RAML"

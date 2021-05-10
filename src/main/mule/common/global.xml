@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<db:config name="MSSQL_Database_Config" doc:name="MSSQL Database Config" doc:id="b2d8a9a7-9f8a-4d5f-8009-470882286cbc" >
+		<db:mssql-connection instanceName="${mssql.instance.name}" host="${mssql.host}" databaseName="${mssql.databaseName}">
+			<db:connection-properties >
+                          <db:connection-property key="integratedSecurity" value="true" />
+             </db:connection-properties>
+        </db:mssql-connection>
+	</db:config>
+	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="f4fa5484-eef2-46f4-a163-7d73dccda2af" name="api-config" api="api\api.raml" />
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="a64653c7-845c-433f-9bdf-e5c3a4e27aa5" flowRef="api-main" />
+	<configuration-properties doc:name="Configuration properties" doc:id="29b9dcf4-bec4-4d2a-a8fc-cf3a8262b8d2" file="environments/${mule.env}.yaml" />
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="c066e7ac-8e71-416b-97c7-049980396eb0" >
+		<vm:queues >
+			<vm:queue queueName="logger" />
+		</vm:queues>
+	</vm:config>
+</mule>

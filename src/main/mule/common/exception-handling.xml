@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="api-apiKitGlobalExceptionMapping" doc:id="eeb276b7-b4a2-430d-959f-d003e51e1d6f" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ad304f15-74d5-49ef-85af-005e061a0fb3" type="APIKIT:NOT_FOUND" >
+			<ee:transform doc:name="Transform Message" doc:id="24fd8e87-8aac-409f-bef1-13ee88663a10" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Log the Error" doc:id="e64e6233-fcf0-4ae2-917b-5a9a728f6a67" message="#[%dw 2.0&#10;output application/json  &#10;---&#10;{&#10;  code: vars.httpStatus default '' as String,&#10;  info: (error.errorType.namespace ++ ':' ++ error.errorType.identifier) default '' as String,&#10;  message: error.detailedDescription default '' as String&#10;}]"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="598b62d3-d92d-4406-99f3-f42b5e9eae4f" type="APIKIT:METHOD_NOT_ALLOWED" >
+			<ee:transform doc:name="Transform Message" doc:id="1f263678-c735-4201-8249-ff3560072779" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[405]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Log the Error" doc:id="8ee5ac60-0949-4f0d-b5a8-286cea16e58d" message="#[%dw 2.0&#10;output application/json  &#10;---&#10;{&#10;  code: vars.httpStatus default '' as String,&#10;  info: (error.errorType.namespace ++ ':' ++ error.errorType.identifier) default '' as String,&#10;  message: error.detailedDescription default '' as String&#10;}]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2f6659ed-c7e4-400c-950b-4ba92434ed80" type="APIKIT:UNSUPPORTED_MEDIA_TYPE" >
+			<ee:transform doc:name="Transform Message" doc:id="93765b95-865d-44d0-8f27-7bcd6392a262" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Log the Error" doc:id="65d6dcd8-ec5e-4ebe-9191-9952be98650b" message="#[%dw 2.0&#10;output application/json  &#10;---&#10;{&#10;  code: vars.httpStatus default '' as String,&#10;  info: (error.errorType.namespace ++ ':' ++ error.errorType.identifier) default '' as String,&#10;  message: error.detailedDescription default '' as String&#10;}]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9e737f3f-88bd-4790-a4e2-431a9210063c" type="APIKIT:NOT_ACCEPTABLE" >
+			<ee:transform doc:name="Transform Message" doc:id="970c96e2-55b2-46ec-9a7f-ece5f2939c95" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[406]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Log the Error" doc:id="f6317a50-4ba8-484e-a6f9-3d5f0bf192d8" message="#[%dw 2.0&#10;output application/json  &#10;---&#10;{&#10;  code: vars.httpStatus default '' as String,&#10;  info: (error.errorType.namespace ++ ':' ++ error.errorType.identifier) default '' as String,&#10;  message: error.detailedDescription default '' as String&#10;}]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="79d83da5-9637-4980-bf99-34a6cfc0f383" type="APIKIT:BAD_REQUEST" >
+			<ee:transform doc:name="Transform Message" doc:id="ce6ecd6f-a9f4-4812-a5af-0e8082312947" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Log the Error" doc:id="aa09680a-0b41-4e99-bb60-4081ef614a2b" message="#[%dw 2.0&#10;output application/json  &#10;---&#10;{&#10;  code: vars.httpStatus default '' as String,&#10;  info: (error.errorType.namespace ++ ':' ++ error.errorType.identifier) default '' as String,&#10;  message: error.detailedDescription default '' as String&#10;}]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2d92e5c6-07bb-44fa-b8c6-77d78718b1d5" type="APIKIT:NOT_IMPLEMENTED" >
+			<ee:transform doc:name="Transform Message" doc:id="d9dab415-1ad5-4fd1-bcea-8e4526da3d14" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[501]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Log the Error" doc:id="0191eba5-d3ba-4abf-85ba-61fbcae798a1" message="#[%dw 2.0&#10;output application/json  &#10;---&#10;{&#10;  code: vars.httpStatus default '' as String,&#10;  info: (error.errorType.namespace ++ ':' ++ error.errorType.identifier) default '' as String,&#10;  message: error.detailedDescription default '' as String&#10;}]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a9329e34-3f79-4192-9e5e-1e0d0075c4ef" type="ANY" >
+			<ee:transform doc:name="map exception" doc:id="ae81f8c9-a2e6-4f34-a9a6-a07c1c77cdd6" >
+				<ee:variables >
+					<ee:set-variable resource="dwl/logging/exception.dwl" variableName="exception" />
+				</ee:variables>
+			</ee:transform>
+			<ee:transform doc:name="map error handling" doc:id="2ef930cd-44b3-4aa9-b643-c8f3256530a3" >
+				<ee:variables >
+					<ee:set-variable resource="dwl/logging/ehSingle.dwl" variableName="ehSingle" />
+				</ee:variables>
+			</ee:transform>
+			<set-payload value="#[vars.ehSingle]" doc:name="Set Payload" doc:id="63b5e769-bc17-432c-844c-333dfe850d33" mimeType="application/json"/>
+			<logger level="INFO" doc:name="Log Error Handling" doc:id="49bfb58f-b6ea-4f30-948a-efb50a36c66b" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+</mule>

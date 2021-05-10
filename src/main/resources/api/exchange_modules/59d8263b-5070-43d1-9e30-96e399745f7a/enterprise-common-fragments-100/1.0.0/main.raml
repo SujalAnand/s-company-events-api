@@ -1,0 +1,46 @@
+#%RAML 1.0 Library
+usage: Enterprise wide - Technical Data Objects - resources library
+
+resourceTypes: 
+  CreateReadUpdateOnly: !include resourceTypes/create-read-update.raml
+  CreateReadReplaceOnly: !include resourceTypes/create-read-replace.raml
+  CreateReadOnly: !include resourceTypes/create-read.raml
+  ReadUpdateOnly: !include resourceTypes/read-update.raml
+  ReadReplaceOnly: !include resourceTypes/read-replace.raml
+  ReadOnly: !include resourceTypes/read.raml
+  ReadOnlyPdf: !include resourceTypes/read-pdf.raml
+  SubmitOnly: !include resourceTypes/submit.raml
+  ReadCollection: !include resourceTypes/read-collection.raml
+  HealthCheck: !include resourceTypes/health-check.raml
+  
+securitySchemes: 
+
+traits:
+  common-http-headers: !include traits/common-headers.raml
+  pageable: !include traits/pageable.raml
+  sortable: !include traits/sortable.raml
+  partial: !include traits/partial.raml
+  searchable-by-date: !include traits/searchable-by-date.raml
+  searchable-by-param: !include traits/searchable-by-param.raml
+  rate-limited: !include traits/rate-limited.raml
+  common-error-handling: !include traits/common-error-handling.raml
+
+types: 
+  CommonResponse:
+    type: !include types/common-response.raml
+    examples: !include examples/common-response-example.raml
+  sftpFileTransfer:
+    type: !include types/file-transfer/sftp-file-transfer-request.raml
+    examples: 
+      file-transfer-password-passphrase:
+        value: !include examples/file-transfer/sftp-file-transfer-request-example1.raml
+      file-transfer-sshkey-overwrite:
+        value: !include examples/file-transfer/sftp-file-transfer-request-example2.raml
+      file-transfer-password-sshkey:
+        value: !include examples/file-transfer/sftp-file-transfer-request-example3.raml
+  sftpFileTransferResponse:
+    displayName: SFTP File Transfer Response Type
+    type: !include types/common-response.raml
+    examples: 
+      file-transfer-successful:
+        value: !include examples/file-transfer/common-response-sftp-file-transfer-example.raml

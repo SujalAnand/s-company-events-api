@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <flow name="get-calendar-by-date-range-flow">
+        <ee:transform doc:name="Initialise vars" doc:id="0b57f461-b934-426e-914e-732968e8023e" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
+				<ee:set-variable variableName="QueryParams" ><![CDATA[attributes.queryParams]]></ee:set-variable>
+				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
+				<ee:set-variable variableName="appName" ><![CDATA[attributes.uriParams.appName default "" as String]]></ee:set-variable>
+				<ee:set-variable variableName="UtcStartDateTime" ><![CDATA[attributes.queryParams.UtcStartDateTime]]></ee:set-variable>
+				<ee:set-variable variableName="UtcEndDateTime" ><![CDATA[attributes.queryParams.UtcEndDateTime]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+
+        <try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
+            <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CALL GetCalendarEntriesByDateRange">
+                <db:sql><![CDATA[{CALL GetCalendarEntriesByDateRange(:operatingUserId, :appName, :StartDateUtc, :EndDateUtc) }]]></db:sql>
+                <db:parameter-types>
+                    <db:parameter-type key="operatingUserId" type="VARCHAR" />
+                </db:parameter-types>
+                <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'StartDateUtc' : vars.UtcStartDateTime, 'EndDateUtc' : vars.UtcEndDateTime, 'appName' : vars.appName}]]]></db:input-parameters>
+            </db:stored-procedure>
+        </try>
+
+        <logger level="INFO" doc:name="Log DB Output" doc:id="6f856a97-0406-4d85-a7a5-52705f20c097" message="#[%dw 2.0
+output application/json
+---
+payload]"/>
+		<set-variable variableName="output" value="#[payload.resultSet1]" doc:name="set output" />
+
+        <ee:transform doc:name="success map error handling">
+            <ee:variables>
+				<ee:set-variable resource="dwl/calendar/calendarByDateRangeResponse.dwl" variableName="ehSingle" />
+            </ee:variables>
+        </ee:transform>
+
+    </flow>
+
+</mule>

@@ -1,0 +1,46 @@
+#%RAML 1.0 ResourceType
+uses:
+  main: 0-main-resourcetype.raml
+get:
+  is : [ main.common-http-headers, main.common-error-handling : { apiShortName: <<apiShortName>>, apiParentResourceName: <<apiParentResourceName>>, apiResourceName: <<apiResourceName>>, apiMethodName: <<apiMethodName>> } ]
+  responses:
+    200:
+      body:
+        application/json:
+          type: <<getResponseType>>
+          displayName: <<getResponseDisplayName>>
+          description: <<getResponseDescription>>
+          examples: <<getResponseExample>>
+put:
+  is : [ main.common-http-headers, main.common-error-handling : { apiShortName: <<apiShortName>>, apiParentResourceName: <<apiParentResourceName>>, apiResourceName: <<apiResourceName>>, apiMethodName: <<apiMethodName>> } ]
+  description: <<putBehaviorDescription>>
+  body:
+    application/json:
+      type: <<putRequestType>>
+      displayName: <<putRequestDisplayName>>
+      description: <<putRequestDescription>>
+      examples: <<putRequestExample>>
+  responses:
+    200:
+      body:
+        application/json:
+          type: <<putResponseType>>
+          displayName: <<putResponseDisplayName>>
+          description: <<putResponseDescription>>
+          examples: <<putResponseExample>>
+post:
+  is : [ main.common-http-headers, main.common-error-handling : { apiShortName: <<apiShortName>>, apiParentResourceName: <<apiParentResourceName>>, apiResourceName: <<apiResourceName>>, apiMethodName: <<apiMethodName>> } ]
+  body:
+    application/json:
+      type: <<postRequestType>>
+      displayName: <<postRequestDisplayName>>
+      description: <<postRequestDescription>>
+      examples: <<postRequestExample>>
+  responses:
+    201:
+      body:
+        application/json:
+          type: <<postResponseType>>
+          displayName: <<postResponseDisplayName>>
+          description: <<postResponseDescription>>
+          examples: <<postResponseExample>>

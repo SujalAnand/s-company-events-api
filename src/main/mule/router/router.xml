@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+    <flow name="router:multi-route">
+         <!--   <ee:transform doc:name="JSON to Object">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+					output application/java
+					-&#45;&#45;
+					payload as Object { class: 'java.util.List'}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform> -->
+    	<ee:transform doc:name="Initializing variables" doc:id="5ccab144-1d98-424a-912c-c366369c7759" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
+				<ee:set-variable variableName="errorHandling" ><![CDATA[[] as Array]]></ee:set-variable>
+				<ee:set-variable variableName="appName" ><![CDATA[attributes.uriParams.appName default '' as String]]></ee:set-variable>
+				<ee:set-variable variableName="meetingId" ><![CDATA[attributes.uriParams.meetingId default '' as String]]></ee:set-variable>
+				<ee:set-variable variableName="kpiId" ><![CDATA[attributes.uriParams.kpiId default '' as String]]></ee:set-variable>
+				<ee:set-variable variableName="agendaId" ><![CDATA[attributes.uriParams.agendaId default '' as String]]></ee:set-variable>
+				<ee:set-variable variableName="calendarId" ><![CDATA[attributes.uriParams.calendarId default '' as String]]></ee:set-variable>
+				<ee:set-variable variableName="employeeId" ><![CDATA[attributes.uriParams.employeeId  default '' as String]]></ee:set-variable>
+				<ee:set-variable variableName="roleName" ><![CDATA[attributes.uriParams.roleName default "" as String]]></ee:set-variable>
+			
+</ee:variables>
+		</ee:transform>
+
+        <foreach collection="#[vars.originalPayload]" doc:name="For Each">
+            <logger message="COUNTER: $#[vars.counter] PAYLOAD: #[payload]" level="INFO" doc:name="Log Counter and Payload" />
+            <flow-ref name="#[vars.logicFlow]" doc:name="#[vars.logicFlow]">
+            </flow-ref>
+            <logger message='#["ehSingle" : vars.ehSingle]' level="DEBUG" doc:name="Log ehSingle" />
+			<ee:transform doc:name="Transform Message" doc:id="7132d7cf-9d15-4ae2-8b3e-443e34eb03b8" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="errorHandling" ><![CDATA[%dw 2.0
+output application/json
+---
+(vars.errorHandling as Array + vars.ehSingle) as Array]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+        </foreach>
+
+    </flow>
+
+</mule>

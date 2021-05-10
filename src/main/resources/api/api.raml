@@ -1,0 +1,471 @@
+#%RAML 1.0
+# The title field should have a meaningful short name of the API. For example: Roles and Users API, Documents API, Calendar API
+title: Company Events API
+
+# The description field should have a description of the API. This description will appear in the API specification published in exchange
+description: System API to retrieve information from CompanyEvents database
+
+# The version field should contain the API version in major.minor version format prefixed with "v". For example: v1.0, v3.4 etc
+version: v1.0
+
+# The mediaType should be application/json by default, however XML or other formats can be supported depending on the use case
+mediaType: application/json
+
+# The protocol should always be HTTPS for RESTful APIs
+protocols: [ HTTPS ]
+
+# The baseUri which forms the base part of the URL for all resources defined within the RAML. Important: Mocking Service must always be DISABLED before publishing the asset to Exchange
+baseUri: http://dev-company-mobile-sa-{version}.uk-e1.cloudhub.io
+
+# The reference to global data types, traits etc defined in the exchange_modules RAML fragments
+uses:
+  security-scheme: exchange_modules/59d8263b-5070-43d1-9e30-96e399745f7a/security-scheme-fragment-100/1.0.0/security-scheme.raml
+  #common-fragments: exchange_modules/59d8263b-5070-43d1-9e30-96e399745f7a/enterprise-common-fragments-100/1.0.0/main.raml
+
+traits:
+  operating-userId: !include traits/operatingUser.raml
+
+# The reference to local data types, traits etc defined within the current RAML
+types:
+  appRole: !include types/appRole.raml
+  user: !include types/user.raml
+  meeting: !include types/meeting.raml
+  
+securedBy: security-scheme.oauth_2_0
+
+/applications:
+  /{appName}:
+    /kpi:
+      post:
+         body:
+          application/json:
+            example: |
+              [
+                {
+                  "DateTimeUtc":"1999-01-01T08:00:00Z",
+                  "Title":"Test Meeting #1",
+                  "Duration":10,
+                  "CalendarEntryType":"Event",
+                  "Comments":"Test meeting, please delete"
+                }
+              ]
+         responses:
+              200:
+                body:
+                  application/json:
+                    example:
+                      message: KPI recieved
+      /byDateRange:
+         get:
+          queryParameters:
+            UtcStartDateTime: 
+              description: Filter Meetings By Start Date
+              required: true
+            UtcEndDateTime:
+              description: Filter Meeting By End Date
+              required: true
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include examples/kpiExample.raml              
+      /{kpiId}:
+        get:
+            description: get kpi by ID 
+            responses:
+              200:
+                body:
+                  application/json:
+                    example: !include examples/kpiExample.raml
+        put:
+          body:
+            application/json:
+                example:
+                  {
+                    "Title":"Test Meeting #1",
+                    "Duration":10,
+                    "Comments":"Test meeting, please delete",
+                    "MeetingType":"Event"
+                  }
+          responses:
+              200:
+                body:
+                  application/json:
+                    example:
+                      message: KPI recieved
+        delete:
+            responses:
+              200:
+                body:
+                  application/json:
+                    example:
+                      message: Meeting deleted
+    /modelLines:
+        get:
+          description: get model lines
+          responses:
+            200:
+              body:
+                application/json:
+                  example:
+                    message: model lines recived
+    /documentTypes:
+      get:
+        description: get doc types
+        responses:
+          200:
+            body:
+              application/json:
+                example:
+                  message: doc types recived
+    /meetingTypes:
+      get:
+        description: get meeting types
+        responses:
+          200:
+            body:
+              application/json:
+                example:
+                  message: meeting types recived
+    /document:
+      get:
+        queryParameters:
+          StartDateTimeUtc: 
+            description: Filter Meetings By Start Date
+            required: true
+          EndDateTimeUtc:
+            description: Filter Meeting By End Date
+            required: true
+          OrderBy:
+            description: Filter Meeting By End Date
+            required: true
+          DocumentTypeNameFilter:
+            description: Filter Meeting By End Date
+            required: false
+          TitleSearchFilter:
+            description: Filter Meeting By End Date
+            required: false
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include examples/meetingExample.raml
+      post:
+        body:
+          application/json:
+            example:
+              {
+                "Title":"Test Meeting #1",
+                "Duration":10,
+                "Comments":"Test meeting, please delete",
+                "MeetingType":"Event"
+              }
+        responses:
+          200:
+            body:
+              application/json:
+                example:
+                  message: Meeting created
+      /{unique_name}:
+        get:
+          description: Get a file from the file share
+          responses:
+            200:
+              body:
+                application/json:
+            404:
+              body:
+                application/json:
+                  example:
+                    {
+                      "message":"not found"
+                    }   
+        delete:
+          displayName: DeleteDocument
+          description: Delete a document 
+          responses:
+            200:
+              body:
+                application/json:
+                  example:
+                    message: Role deleted
+            404:
+              body:
+                application/json:
+                  example:
+                    {
+                      "message":"not found"
+                    }
+        /documentDetail:
+          get:
+            displayName: GetDocumentDetail
+            description: Get Document Details
+            responses:
+              200:
+                body:
+                  application/json:
+                    example: !include examples/documentDetailExample.raml
+          /{linkTypeName}:
+            get:
+              displayName: GetDocumentDetail
+              description: Get Document Details
+              responses:
+                200:
+                  body:
+                    application/json:
+                      example: !include examples/documentDetailExample.raml
+
+    #GET all users by application
+    #Resource: /applications/{appName}/users
+    /calendarTypes:
+        get:
+          description: get calendar Item
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include examples/meetingExample.raml  
+    /calendar:
+      post:
+         body:
+          application/json:
+            example: |
+              [
+                {
+                  "DateTimeUtc":"1999-01-01T08:00:00Z",
+                  "Title":"Test Meeting #1",
+                  "Duration":10,
+                  "CalendarEntryType":"Event",
+                  "Comments":"Test meeting, please delete"
+                }
+              ]
+         responses:
+            200:
+              body:
+                application/json:
+                  example:
+                    message: Calendar Entry created
+      /{calendarId}:
+        get:
+          description: get calendar Item
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include examples/meetingExample.raml
+        delete:
+          responses:
+            200:
+              body:
+                application/json:
+                  example:
+                    message: Entry deleted
+        put:
+            body:
+              application/json:
+                example:
+                  {
+                    "Title":"Test Meeting #1",
+                    "Duration":10,
+                    "Comments":"Test meeting, please delete",
+                    "MeetingType":"Event"
+                  }
+            responses:
+              200:
+                body:
+                  application/json:
+                    example:
+                      message: Meeting Updated
+      /byDateRange:
+       get:
+        queryParameters:
+          UtcStartDateTime: 
+            description: Filter Meetings By Start Date
+            required: true
+          UtcEndDateTime:
+            description: Filter Meeting By End Date
+            required: true
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include examples/meetingExample.raml
+    /meeting:
+      post:
+        body:
+          application/json:
+            example:
+              {
+                "Title":"Test Meeting #1",
+                "Duration":10,
+                "Comments":"Test meeting, please delete",
+                "MeetingType":"Event"
+              }
+        responses:
+          200:
+            body:
+              application/json:
+                example:
+                  message: Meeting created   
+      /byDateRange:
+         get:
+          queryParameters:
+            UtcStartDateTime: 
+              description: Filter Meetings By Start Date
+              required: true
+            UtcEndDateTime:
+              description: Filter Meeting By End Date
+              required: true
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include examples/meetingExample.raml          
+      /byId:
+        /{meetingId}:
+          get:
+            description: get meeting
+            responses:
+              200:
+                body:
+                  application/json:
+                    example: !include examples/meetingExample.raml
+          delete:
+            responses:
+              200:
+                body:
+                  application/json:
+                    example:
+                      message: Meeting deleted
+          put:
+            body:
+              application/json:
+                example:
+                  {
+                    "Title":"Test Meeting #1",
+                    "Duration":10,
+                    "Comments":"Test meeting, please delete",
+                    "MeetingType":"Event"
+                  }
+            responses:
+              200:
+                body:
+                  application/json:
+                    example:
+                      message: Meeting Updated
+          /agendaItem:
+            /{agendaId}:
+              delete:
+                responses:
+                  200:
+                    body:
+                      application/json:
+                        example:
+                          message: Meeting deleted
+              put:
+                body:
+                  application/json:
+                    example:
+                      {
+                        "Title":"Test Meeting #1",
+                        "Duration":10,
+                        "Comments":"Test meeting, please delete",
+                        "MeetingType":"Event"
+                      }
+                responses:
+                  200:
+                    body:
+                      application/json:
+                        example:
+                          message: Meeting Updated
+          /agendaItems:
+            post:
+              body:
+                application/json:
+                  example:
+                    {
+                      "MeetingId":1,
+                      "Order":0,
+                      "Title":"Test Meeting #1",
+                      "Duration":10,
+                      "Presenters":"Dan, Richard, Lilly"
+                    }
+              responses:
+                200:
+                  body:
+                    application/json:
+                      example:
+                        message: KPI recieved
+    /appRoles:
+      get:
+      #GET all roles by application
+      #Resource: /applications/appRoles/
+        responses:
+          200:
+            body: 
+              application/json:
+                type: appRole[]
+                example: !include examples/appRoleExample.raml
+    /users:
+      get:
+        responses:
+          200:
+            body: 
+              application/json:
+                type: user[]
+                example: !include examples/userExample.raml
+      /{employeeId}:
+        /userRoles:
+          #is:
+            #operating-userId: {}
+          uriParameters:
+            employeeId:
+              description: This the user you are operating on not operating as in the database
+            #GET all roles by application
+            #Resource: /applications/{appName}/appRoles
+          get:
+            #GET all roles by application for a user
+            #Resource: /applications/{appName}/appRoles/
+            responses:
+              200:
+                body: 
+                  application/json:
+                      type: appRole[]
+                      example: !include examples/appRoleExample.raml 
+          /{roleName}:
+            #Grant user role in application (PUT)
+            #Resource: /applications/{appName}/users/{userName}/userRoles/
+            #{roleName}
+            post:
+              body:
+                application/json:
+                  example:
+                    [
+                      {
+                        "firstName":"Lilly",
+                        "lastName":"Hulse"
+                      }
+                    ]
+              responses:
+                200:
+                  body:
+                    application/json:
+                      example:
+                        message: User role granted
+            put:
+              responses:
+                200:
+                  body:
+                    application/json:
+                      example:
+                        message: User role granted
+            #Delete user role in application (DELETE)
+            #Resource: /applications/{appName}/users/{userName}/userRoles/
+            # {roleName} 
+            delete:
+              responses:
+                200:
+                  body:
+                   application/json:
+                     example:
+                       message: Role deleted

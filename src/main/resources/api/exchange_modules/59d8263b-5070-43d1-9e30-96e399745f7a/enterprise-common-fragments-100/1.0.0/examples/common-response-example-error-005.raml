@@ -1,0 +1,10 @@
+#%RAML 1.0 NamedExample
+api: "Some API"
+uri: "/api"
+timestamp: "2000-01-01T00:00:00.0Z"
+code: <<apiShortName>>_<<apiParentResourceName>><<apiResourceName>><<apiMethodName>>_005
+type: "ERROR"
+summary: "Unsupported Media Type"
+additionalInformation:
+  type: "Text"
+  details: "The  media type in the Content-Type header for the POST/ PATCH/ PUT request is not supported by the API"

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <flow name="delete-agenda-item-by-id-flow">
+
+        <ee:transform doc:name="Initialise vars" doc:id="44ae8063-b06d-4622-9b68-ccd6a6b13d59" >
+			<ee:variables >
+				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
+				<ee:set-variable variableName="appName" ><![CDATA[attributes.uriParams.appName]]></ee:set-variable>
+				<ee:set-variable variableName="meetingId" ><![CDATA[attributes.uriParams.meetingId]]></ee:set-variable>
+				<ee:set-variable variableName="agendaId" ><![CDATA[attributes.uriParams.agendaId]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+
+        <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CALL DeleteAgendaItemById">
+            <db:sql><![CDATA[{ CALL DeleteAgendaItemById(:operatingUserId, :appName, :meetingId, :agendaId) }]]></db:sql>
+            <db:parameter-types>
+                <db:parameter-type key="operatingUserId" type="VARCHAR" />
+                <db:parameter-type key="appName" type="VARCHAR" />
+                <db:parameter-type key="meetingId" type="INTEGER" />
+                <db:parameter-type key="agendaId" type="INTEGER" />
+            </db:parameter-types>
+            <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'meetingId' : vars.meetingId, 'agendaId' : vars.agendaId}]]]></db:input-parameters>
+        </db:stored-procedure>
+
+        <set-variable variableName="output" value="#[payload]" doc:name="set output" />
+
+        <ee:transform doc:name="Delete Agenda By Id Response">
+            <ee:variables>
+				<ee:set-variable resource="dwl/meetings/deleteAgendaByIdResponse.dwl" variableName="ehSingle" />
+            </ee:variables>
+        </ee:transform>
+
+    </flow>
+
+</mule>

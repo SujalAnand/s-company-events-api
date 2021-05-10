@@ -1,0 +1,20 @@
+#%RAML 1.0 ResourceType
+description: This operation for the API is to submit a request
+uses:
+  main: 0-main-resourcetype.raml
+post:
+  is : [ main.common-http-headers, main.common-error-handling : { apiShortName: <<apiShortName>>, apiParentResourceName: <<apiParentResourceName>>, apiResourceName: <<apiResourceName>>, apiMethodName: <<apiMethodName>> } ]
+  body:
+    application/json:
+      type: <<postRequestType>>
+      displayName: <<postRequestDisplayName>>
+      description: <<postRequestDescription>>      
+      examples: <<postRequestExample>>
+  responses:
+    200:
+      body:
+        application/json:
+          type: <<postResponseType>>
+          displayName: <<postResponseDisplayName>>
+          description: <<postResponseDescription>>
+          examples: <<postResponseExample>>

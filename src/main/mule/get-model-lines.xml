@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:compatibility="http://www.mulesoft.org/schema/mule/compatibility" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/compatibility http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <sub-flow name="get-model-lines-sub-flow">
+        <ee:transform doc:name="Initialise vars" doc:id="5364af73-7e23-4f69-9877-f49c745e1652" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="appName" ><![CDATA[attributes.uriParams.appName]]></ee:set-variable>
+				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<db:stored-procedure doc:name="Call GetAllModelLines" doc:id="7f0a2d68-90ca-49f8-b18d-1a768450fcd0" config-ref="MSSQL_Database_Config">
+			<db:sql ><![CDATA[{ CALL GetAllModelLines(:operatingUserId, :appName) }]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'appName' : vars.appName, 'operatingUserId' : vars.operatingUserId}]]]></db:input-parameters>
+		</db:stored-procedure>
+        <ee:transform doc:name="Model Lines Response">
+            <ee:message>
+                <ee:set-payload>%dw 2.0
+output application/json  
+---
+payload.resultSet1</ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </sub-flow>
+
+</mule>
