@@ -14,8 +14,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			</ee:variables>
 		</ee:transform>
 		<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CALL GetDocumentBinaryById()">
-            <db:sql><![CDATA[{ CALL GetDocumentBinaryById(:operatingUserId, :appName, :documentDetailId) }]]></db:sql>
-            <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'documentDetailId' : vars.documentDetailId}]]]></db:input-parameters>
+            <db:sql ><![CDATA[${documentdetail.getDocument}]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'documentDetailId' : vars.documentDetailId}]]]></db:input-parameters>
         </db:stored-procedure>
 		<ee:transform doc:name="JavaPayload to [JSON]" doc:id="edcfd23e-36dd-4a3c-abbf-78034c9934bc" >
 			<ee:message >

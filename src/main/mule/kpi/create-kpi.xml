@@ -12,8 +12,8 @@
 		</ee:transform>
 		<try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
             <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CreateKpi">
-               <db:sql><![CDATA[{ CALL CreateKpi(:operatingUserId, :appName, :KpiType, :ModelLineName, :DateUtc, :Comments, :KpiId) }]]></db:sql>
-                <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'ModelLineName' : vars.originalPayload.ModelLineName, 'DateUtc' : vars.originalPayload.UtcDate, 'Comments' : vars.originalPayload.Comment, 'KpiType' : vars.originalPayload.KpiType}]]]></db:input-parameters>
+                <db:sql ><![CDATA[${kpi.createKPI}]]></db:sql>
+				<db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'ModelLineName' : vars.originalPayload.ModelLineName, 'DateUtc' : vars.originalPayload.UtcDate, 'Comments' : vars.originalPayload.Comment, 'KpiType' : vars.originalPayload.KpiType}]]]></db:input-parameters>
 				<db:output-parameters>
                     <db:output-parameter key="KpiId" type="INTEGER"/>
                 </db:output-parameters>

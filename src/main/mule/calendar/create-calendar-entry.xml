@@ -14,7 +14,7 @@
 
         <try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
             <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CreateCalendarEntry">
-                <db:sql><![CDATA[{ CALL CreateCalendarEntry(:operatingUserId, :appName, :Title, :Duration, :DateTimeUtc, :Comments, :CalendarEntryType, :CalendarEntryId) }]]></db:sql>
+				<db:sql><![CDATA[${calendar.createCalendar}]]></db:sql>
                 <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'Title' : vars.originalPayload.Title, 'Duration' : vars.originalPayload.Duration, 'Comments' : vars.originalPayload.Comments, 'CalendarEntryType' : vars.originalPayload.CalendarEntryType, 'DateTimeUtc' : vars.originalPayload.DateTimeUtc}]]]></db:input-parameters>
                 <db:output-parameters>
                     <db:output-parameter key="CalendarEntryId" />

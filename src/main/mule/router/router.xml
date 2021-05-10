@@ -32,7 +32,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             <logger message="COUNTER: $#[vars.counter] PAYLOAD: #[payload]" level="INFO" doc:name="Log Counter and Payload" />
             <flow-ref name="#[vars.logicFlow]" doc:name="#[vars.logicFlow]">
             </flow-ref>
-            <logger message='#["ehSingle" : vars.ehSingle]' level="DEBUG" doc:name="Log ehSingle" />
+            <logger message='#["ehSingle" : vars.ehSingle]' level="DEBUG" doc:name="Log ehSingle" category="s-company-events-api"/>
 			<ee:transform doc:name="Transform Message" doc:id="7132d7cf-9d15-4ae2-8b3e-443e34eb03b8" >
 				<ee:message >
 				</ee:message>

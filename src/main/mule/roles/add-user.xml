@@ -9,15 +9,15 @@
 				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
 				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
 				<ee:set-variable variableName="appName" ><![CDATA[vars.appName]]></ee:set-variable>
-				<ee:set-variable variableName="employeeId" ><![CDATA[vars.employeeId]]></ee:set-variable>
+				<ee:set-variable variableName="employeeId" ><![CDATA[vars.employeeId default ""]]></ee:set-variable>
 				<ee:set-variable variableName="roleName" ><![CDATA[vars.roleName]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 
         <try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
             <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="Grant Role to User">
-               <db:sql><![CDATA[{ CALL GrantRoleByUserApplication(:operatingUserId, :employeeId, :appName, :roleName, :firstName, :lastName) }]]></db:sql>
-                <db:parameter-types>
+                <db:sql ><![CDATA[${roles.addUser}]]></db:sql>
+				<db:parameter-types>
                     <db:parameter-type key="appName" type="VARCHAR" />
                     <db:parameter-type key="employeeId" type="VARCHAR" />
                     <db:parameter-type key="roleName" type="VARCHAR" />

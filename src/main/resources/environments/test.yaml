@@ -1,6 +1,6 @@
 # API Configuration
 api:
-    id: "16848514"
+    id: "16285298"
     ver: "v1"
     application:
         name: "s-company-events-api"
@@ -17,3 +17,6 @@ mssql:
     instance:
         name: "SQL_SAC_SEC_DEV"
     host: "BYMCCRSH0606"
+    retry: 
+        frequency: "2000"
+        attempts: "3"

@@ -11,13 +11,14 @@
 			<ee:variables >
 				<ee:set-variable variableName="appName" ><![CDATA[vars.appName]]></ee:set-variable>
 				<ee:set-variable variableName="operatingUserId" ><![CDATA[vars.decodedBT.body.preferred_username]]></ee:set-variable>
-				<ee:set-variable variableName="calendarId" ><![CDATA[vars.calendarId]]></ee:set-variable>
+				<ee:set-variable variableName="calendarId" ><![CDATA[attributes.uriParams.calendarId default '' as String]]></ee:set-variable>
 				<ee:set-variable variableName="originalPayload" ><![CDATA[payload]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
-			<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CALL UpdateCalendarEntryById"><db:sql><![CDATA[{ CALL UpdateCalendarEntryById(:operatingUserId, :appName, :CalendarEntryId, :Title, :Duration, :DateTimeUtc, :Comments, :CalendarEntryType) }]]></db:sql>
-                <db:parameter-types>
+			<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CALL UpdateCalendarEntryById">
+                <db:sql ><![CDATA[${calendar.updateCalendarEntry}]]></db:sql>
+				<db:parameter-types>
                     <db:parameter-type key="Duration" type="INTEGER" />
                     <db:parameter-type key="CalendarEntryId" type="INTEGER" />
                 </db:parameter-types>

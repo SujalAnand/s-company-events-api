@@ -1,0 +1,63 @@
+calendar:
+  createCalendar: '{ CALL CreateCalendarEntry(:operatingUserId, :appName, :Title, :Duration, :DateTimeUtc, :Comments, :CalendarEntryType, :CalendarEntryId) }'
+  deleteCalendar: '{ CALL DeleteCalendarEntry(:operatingUserId, :appName, :calendarId) }'
+  calendarByDateRange: '{CALL GetCalendarEntriesByDateRange(:operatingUserId, :appName, :StartDateUtc, :EndDateUtc) }'
+  calendarEventType: '{ CALL GetCalendarEventTypes(:operatingUserId, :appName) }'
+  calendarItemId: 
+        entryId: '{ CALL GetCalendarEntryById(:operatingUserId, :appName, :calendarId) }'
+        documentDetailId: '{ CALL GetLinkedDocumentsByLinkId(:operatingUserId, :appName, "Calendar", :calendarId) }'
+  updateCalendarEntry: '{ CALL UpdateCalendarEntryById(:operatingUserId, :appName, :CalendarEntryId, :Title, :Duration, :DateTimeUtc, :Comments, :CalendarEntryType) }'
+
+#Document Detail
+documentdetail:
+  getDocument: '{ CALL GetDocumentBinaryById(:operatingUserId, :appName, :documentDetailId) }'
+  getDocumentById: '{ CALL LinkedDocumentByLinkId(:operatingUserId, :appName, :linkTypeName, :meetingId) }'
+  getLoneDocumentDetailById: '{ CALL GetDocumentDetailById(:operatingUserId, :appName, :documentDetailId) }'
+  
+#Document
+document:
+  deleteDocument: '{ CALL DeleteDocumentDetailById(:operatingUserId, :appName, :documentDetailId) }'
+  filterDocument: '{CALL GetDocumentsMatchingAllCriteria(:operatingUserId, :appName, :orderBy, :startDateUtc, :endDateUtc, :documentTypeFilter, :titleContainsFilter) }'
+  getDocumenttypes: '{ CALL GetAllDocumentTypes(:operatingUserId, :appName) }'
+  uploadDocument: '{CALL CreateDocumentDetail(:operatingUserId, :appName, :title, :physicalFileName, :documentType, :LinkEntityName, :LinkedItemId, :DateTag, :Comments, :documentBinary, :documentDetailId) }'
+
+#KPI    
+kpi:
+  createKPI: '{ CALL CreateKpi(:operatingUserId, :appName, :KpiType, :ModelLineName, :DateUtc, :Comments, :KpiId) }'
+  deleteKPI: '{ CALL DeleteKpi(:operatingUserId, :appName, :kpiId) }'
+  kpiByDateRange: '{CALL GetKPIsByDateRange(:operatingUserId, :appName, :StartDateUtc, :EndDateUtc) }'
+  kpiById: 
+        getKPIById: '{ CALL GetKpiById(:operatingUserId, :appName, :kpiId) }'
+        documentDetailById: '{ CALL GetLinkedDocumentsByLinkId(:operatingUserId, :appName, "KPI", :kpiId) }'
+  updateKPI: '{ CALL UpdateKpi(:operatingUserId, :appName, :KpiId, :KpiType, :ModelLineName, :DateUtc, :Comments) }'
+  
+#Meetings
+meetings:
+  createAgenda: '{CALL CreateAgendaItemForMeeting(:operatingUserId, :appName, :meetingId, :agendaOrder, :Title, :Duration, :Presenters, :agendaItemId) }'
+  createMeeting: '{CALL CreateMeeting(:operatingUserId, :appName, :Title, :Duration, :UtcDateTime, :Comments, :meetingType, :meetingId) }'
+  deleteAgenda: '{ CALL DeleteAgendaItemById(:operatingUserId, :appName, :meetingId, :agendaId) }'
+  deleteMeetingById: '{ CALL DeleteMeetingById(:operatingUserId, :appName, :meetingId) }'
+  meetingById: 
+        getMeeting: '{ CALL GetMeetingById(:operatingUserId, :appName, :meetingId) }'
+        getdocumentDetailById: '{ CALL GetLinkedDocumentsByLinkId(:operatingUserId, :appName, "Meeting", :meetingId) }'
+        getAgendaItemByMeetingId: '{ CALL GetAgendaItemsByMeetingId(:operatingUserId, :appName, :meetingId) }'
+        getLinkedDocument: '{ CALL GetLinkedDocumentsByLinkId(:operatingUserId, :appName, "Agenda", :agendaItemId) }'
+  getMeetingByDateRange: '{CALL GetMeetingsByDateRange(:operatingUserId, :appName, :StartDateUtc, :EndDateUtc) }'
+  getMeetingTypes: '{ CALL GetMeetingTypes(:operatingUserId, :appName) }'
+  getRelatedAgendaItems: '{ CALL GetAgendaItemsByMeetingId(:operatingUserId, :appName, :meetingId) }'
+  updateAgendaItem: '{CALL UpdateAgendaItem(:operatingUserId, :appName, :agendaItemId, :Title, :Duration, :agendaOrder, :Presenters) }'
+  updatemeeting: '{CALL UpdateMeeting(:operatingUserId, :appName, :meetingId, :meetingType, :Title, :Duration, :UtcDateTime, :Comments) }'    
+  
+#ModelLines
+modelLines:
+  getModelLines: '{ CALL GetAllModelLines(:operatingUserId, :appName) }'
+  
+#Roles
+roles:
+  addUser: '{ CALL GrantRoleByUserApplication(:operatingUserId, :employeeId, :appName, :roleName, :firstName, :lastName) }'
+  deleteUser: '{ CALL RevokeRoleByUserApplication(:operatingUserId, :employeeId, :appName, :roleName) }'
+  getAppRole: '{ CALL GetRolesByUserApplication(:operatingUserId, :employeeId, :appName) }'
+  getRoles: '{ CALL GetRolesByApplication(:operatingUserId, :appName) }'
+  getUser: '{ CALL GetUsersByApplication(:operatingUserId, :appName) }'
+  
+

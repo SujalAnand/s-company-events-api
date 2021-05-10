@@ -83,14 +83,14 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
     <flow name="get:\applications\(appName)\calendar\(calendarId):api-config">
         <flow-ref name="get-calendar-item-by-id-sub-flow" doc:name="get-calendar-item-by-id-sub-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="delete:\applications\(appName)\document\(unique_name):api-config">
         <flow-ref name="delete-document-flow" doc:name="delete-document-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -109,7 +109,7 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -118,21 +118,21 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="delete:\applications\(appName)\calendar\(calendarId):api-config">
         <flow-ref name="delete-calendar-item-by-id-sub-flow" doc:name="delete-calendar-item-by-id-sub-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="get:\applications\(appName)\meeting\byId\(meetingId):api-config">
         <flow-ref name="get-meeting-by-id-sub-flow" doc:name="get-meeting-by-id-sub-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -151,7 +151,7 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -163,7 +163,7 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
     <flow name="get:\applications\(appName)\kpi\(kpiId):api-config">
         <flow-ref name="get-kpi-by-id-flow" doc:name="get-kpi-by-id-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -172,35 +172,35 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="delete:\applications\(appName)\meeting\byId\(meetingId):api-config">
         <flow-ref name="delete-meeting-by-id-sub-flow" doc:name="delete-meeting-by-id-sub-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="delete:\applications\(appName)\meeting\byId\(meetingId)\agendaItem\(agendaId):api-config">
         <flow-ref name="delete-agenda-item-by-id-flow" doc:name="delete-agenda-item-by-id-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="get:\applications\(appName)\meeting\byDateRange:api-config">
         <flow-ref name="get-meetings-by-date-range-flow" doc:name="get-meetings-by-date-range-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="get:\applications\(appName)\document\(unique_name)\documentDetail\(linkTypeName):api-config" initialState="stopped">
         <flow-ref name="get-document-detail-by-id-sub-flow" doc:name="get-document-detail-by-id-sub-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -209,7 +209,7 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -218,7 +218,7 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -227,14 +227,14 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="delete:\applications\(appName)\kpi\(kpiId):api-config">
         <flow-ref name="delete-kpi-by-id-flow" doc:name="delete-kpi-by-id-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -243,21 +243,21 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="get:\applications\(appName)\calendar\byDateRange:api-config">
         <flow-ref name="get-calendar-by-date-range-flow" doc:name="get-calendar-by-date-range-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="get:\applications\(appName)\kpi\byDateRange:api-config">
         <flow-ref name="get-kpi-by-date-range-flow" doc:name="get-kpi-by-date-range-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -266,21 +266,21 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="get:\applications\(appName)\document\(unique_name)\documentDetail:api-config">
         <flow-ref name="get-lone-doument-detail-by-id-flow" doc:name="get-lone-doument-detail-by-id-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
     <flow name="get:\applications\(appName)\document:api-config">
         <flow-ref name="filter-documents-flow" doc:name="filter-documents-flow" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 
@@ -289,7 +289,7 @@ var splitPayload = ((vars.bearerToken splitBy " ")[1] splitBy ".")
 
         <flow-ref name="router:multi-route" doc:name="router:multi-route" />
 
-        <flow-ref name="errorHandling:single-response-payload" doc:name="errorHandling:single-response-payload" />
+        <flow-ref name="common-response-flow" doc:name="common-response-flow" />
 
     </flow>
 

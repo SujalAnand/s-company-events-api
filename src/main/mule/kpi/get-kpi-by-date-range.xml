@@ -15,8 +15,8 @@
 		</ee:transform>
 		<try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
             <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CALL GetKPIsByDateRange">
-                <db:sql><![CDATA[{CALL GetKPIsByDateRange(:operatingUserId, :appName, :StartDateUtc, :EndDateUtc) }]]></db:sql>
-                <db:parameter-types>
+                <db:sql ><![CDATA[${kpi.kpiByDateRange}]]></db:sql>
+				<db:parameter-types>
                     <db:parameter-type key="operatingUserId" type="VARCHAR" />
                 </db:parameter-types>
                 <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'StartDateUtc' : vars.UtcStartDateTime, 'EndDateUtc' : vars.UtcEndDateTime, 'appName' : vars.appName}]]]></db:input-parameters>

@@ -10,8 +10,8 @@
 			</ee:variables>
 		</ee:transform>
         <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="DeleteMeetingById">
-            <db:sql><![CDATA[{ CALL DeleteMeetingById(:operatingUserId, :appName, :meetingId) }]]></db:sql>
-            <db:parameter-types>
+            <db:sql ><![CDATA[${meetings.deleteMeetingById}]]></db:sql>
+			<db:parameter-types>
                 <db:parameter-type key="operatingUserId" type="VARCHAR" />
                 <db:parameter-type key="appName" type="VARCHAR" />
                 <db:parameter-type key="meetingId" type="INTEGER" />

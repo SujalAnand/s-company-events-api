@@ -34,10 +34,10 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
             </otherwise>
         </choice>
 	</sub-flow>
-	<flow name="errorHandling:single-response-payload">
+	<flow name="common-response-flow">
         <set-payload value="#[vars.ehSingle]" doc:name="Set Payload" />
 
-        <logger message='#["EH PAYLOAD " : payload.results]' level="DEBUG" doc:name="log eh results" />
+        <logger message='#["EH PAYLOAD " : payload.results]' level="DEBUG" doc:name="log eh results" category="s-company-events-api"/>
 		<set-variable variableName="emptyResults" value="#[((isEmpty(payload.results)) or (sizeOf(payload.results) == 0) default true)]" doc:name="set emptyResults" />
 		<ee:transform doc:name="set path">
             <ee:variables>
@@ -45,7 +45,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
             </ee:variables>
         </ee:transform>
 
-        <logger message='#["Error Handling vars: $(vars)"]' level="DEBUG" doc:name="log vars" />
+        <logger message='#["Error Handling vars: $(vars)"]' level="DEBUG" doc:name="log vars" category="s-company-events-api"/>
 
         <flow-ref doc:name="Ref: output-logic Sub Flow" doc:id="4b1efcdf-25cd-47fb-8b43-a662a660ed2d" name="generate-output-logic-sub-flow" />
 		<set-payload value="#[vars.outputResult]" doc:name="set Payload" encoding="UTF-8" mimeType="application/json" />

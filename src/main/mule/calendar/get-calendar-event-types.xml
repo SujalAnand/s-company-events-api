@@ -11,7 +11,7 @@
 			</ee:variables>
 		</ee:transform>
 		<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="Call GetCalendarEventTypes">
-             <db:sql><![CDATA[{ CALL GetCalendarEventTypes(:operatingUserId, :appName) }]]></db:sql>
+             <db:sql><![CDATA[${calendar.calendarEventType}]]></db:sql>
             <db:parameter-types>
                 <db:parameter-type key="appName" type="VARCHAR" />
                 <db:parameter-type key="operatingUserId" type="VARCHAR" />

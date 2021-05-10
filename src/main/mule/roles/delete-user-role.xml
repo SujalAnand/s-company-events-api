@@ -13,8 +13,8 @@
 			</ee:variables>
 		</ee:transform>
         <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="Delete role from User">
-           <db:sql><![CDATA[{ CALL RevokeRoleByUserApplication(:operatingUserId, :employeeId, :appName, :roleName) }]]></db:sql>
-            <db:parameter-types>
+            <db:sql ><![CDATA[${roles.deleteUser}]]></db:sql>
+			<db:parameter-types>
                 <db:parameter-type key="appName" type="VARCHAR" />
                 <db:parameter-type key="employeeId" type="VARCHAR" />
                 <db:parameter-type key="roleName" type="VARCHAR" />
