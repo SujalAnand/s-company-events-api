@@ -22,13 +22,13 @@
             </db:stored-procedure>
         </try>
 		<set-variable variableName="output" value="#[payload.CalendarEntryId]" doc:name="set output" />
-
-        <ee:transform doc:name="success map error handling">
+		<ee:transform doc:name="success map error handling">
             <ee:variables>
 				<ee:set-variable resource="dwl/calendar/createCalendarEntryResponse.dwl" variableName="ehSingle" />
             </ee:variables>
         </ee:transform>
 
-    </flow>
+    
+</flow>
 
 </mule>
