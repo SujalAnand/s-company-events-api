@@ -16,8 +16,8 @@
 
         <try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
             <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="Grant Role to User">
-               <db:sql><![CDATA[{ CALL GrantRoleByUserApplication(:operatingUserId, :employeeId, :appName, :roleName, :firstName, :lastName) }]]></db:sql>
-                <db:parameter-types>
+                <db:sql ><![CDATA[${roles.addUser}]]></db:sql>
+				<db:parameter-types>
                     <db:parameter-type key="appName" type="VARCHAR" />
                     <db:parameter-type key="employeeId" type="VARCHAR" />
                     <db:parameter-type key="roleName" type="VARCHAR" />

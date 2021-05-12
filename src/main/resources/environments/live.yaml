@@ -17,3 +17,6 @@ mssql:
     instance:
         name: "SQL_SAC_SEC_PRD"
     host: "BYMCCRSH0612"
+    retry: 
+        frequency: "2000"
+        attempts: "3"

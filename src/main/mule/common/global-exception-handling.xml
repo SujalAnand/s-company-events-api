@@ -90,17 +90,13 @@ output application/json
 			<logger level="INFO" doc:name="Log the Error" doc:id="0191eba5-d3ba-4abf-85ba-61fbcae798a1" message="#[%dw 2.0&#10;output application/json  &#10;---&#10;{&#10;  code: vars.httpStatus default '' as String,&#10;  info: (error.errorType.namespace ++ ':' ++ error.errorType.identifier) default '' as String,&#10;  message: error.detailedDescription default '' as String&#10;}]" />
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a9329e34-3f79-4192-9e5e-1e0d0075c4ef" type="ANY" >
-			<ee:transform doc:name="map exception" doc:id="ae81f8c9-a2e6-4f34-a9a6-a07c1c77cdd6" >
+			<ee:transform doc:name="Error Response" doc:id="2ef930cd-44b3-4aa9-b643-c8f3256530a3" >
+				<ee:message >
+					<ee:set-payload resource="dwl/common/errorResponse.dwl" />
+				</ee:message>
 				<ee:variables >
-					<ee:set-variable resource="dwl/logging/exception.dwl" variableName="exception" />
 				</ee:variables>
 			</ee:transform>
-			<ee:transform doc:name="map error handling" doc:id="2ef930cd-44b3-4aa9-b643-c8f3256530a3" >
-				<ee:variables >
-					<ee:set-variable resource="dwl/logging/ehSingle.dwl" variableName="ehSingle" />
-				</ee:variables>
-			</ee:transform>
-			<set-payload value="#[vars.ehSingle]" doc:name="Set Payload" doc:id="63b5e769-bc17-432c-844c-333dfe850d33" mimeType="application/json"/>
 			<logger level="INFO" doc:name="Log Error Handling" doc:id="49bfb58f-b6ea-4f30-948a-efb50a36c66b" message="#[payload]" />
 		</on-error-propagate>
 	</error-handler>

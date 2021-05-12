@@ -12,8 +12,8 @@
 			</ee:variables>
 		</ee:transform>
 		<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="GetCalendarEntryById">
-             <db:sql><![CDATA[{ CALL GetCalendarEntryById(:operatingUserId, :appName, :calendarId) }]]></db:sql>
-            <db:parameter-types>
+            <db:sql ><![CDATA[${calendar.calendarItemId.entryId}]]></db:sql>
+			<db:parameter-types>
                 <db:parameter-type key="operatingUserId" type="VARCHAR" />
                 <db:parameter-type key="appName" type="VARCHAR" />
                 <db:parameter-type key="calendarId" type="INTEGER" />
@@ -32,8 +32,9 @@ payload.resultSet1</ee:set-variable>
 output applicaton/json
 ---
 vars."calendar-info"]'/>
-		<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="GetDocumentDetailById(Calendar)"><db:sql><![CDATA[{ CALL GetLinkedDocumentsByLinkId(:operatingUserId, :appName, "Calendar", :calendarId) }]]></db:sql>
-            <db:parameter-types>
+		<db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="GetDocumentDetailById(Calendar)">
+            <db:sql ><![CDATA[${calendar.calendarItemId.documentDetailId}]]></db:sql>
+			<db:parameter-types>
                 <db:parameter-type key="operatingUserId" type="VARCHAR" />
                 <db:parameter-type key="appName" type="VARCHAR" />
                 <db:parameter-type key="calendarId" type="INTEGER" />

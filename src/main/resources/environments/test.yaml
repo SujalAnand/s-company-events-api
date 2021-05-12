@@ -9,11 +9,13 @@ api:
     http:
         listener:
             path: "/${api.application.name}/${api.ver}/*"
-    name: "groupId:59d8263b-5070-43d1-9e30-96e399745f7a:assetId:s-company-events-api"
-    version: "v1.0:16285298"
+            
 #Database Configuration
 mssql:
     databaseName: "CompanyEvents"
     instance:
         name: "SQL_SAC_SEC_DEV"
     host: "BYMCCRSH0606"
+    retry: 
+        frequency: "2000"
+        attempts: "3"

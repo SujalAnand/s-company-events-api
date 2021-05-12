@@ -15,8 +15,8 @@
 		</ee:transform>
 		<try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
             <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CALL UpdateAgendaItem">
-                <db:sql><![CDATA[{CALL UpdateAgendaItem(:operatingUserId, :appName, :agendaItemId, :Title, :Duration, :agendaOrder, :Presenters) }]]></db:sql>
-                <db:parameter-types>
+                <db:sql ><![CDATA[${meetings.updateAgendaItem}]]></db:sql>
+				<db:parameter-types>
                     <db:parameter-type key="operatingUserId" type="VARCHAR" />
                     <db:parameter-type key="appName" type="VARCHAR" />
                     <db:parameter-type key="Title" type="NVARCHAR" />

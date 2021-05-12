@@ -11,8 +11,8 @@
 			</ee:variables>
 		</ee:transform>
         <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="Get User">
-           <db:sql><![CDATA[{ CALL GetUsersByApplication(:operatingUserId, :appName) }]]></db:sql>
-            <db:parameter-types>
+            <db:sql ><![CDATA[${roles.getUser}]]></db:sql>
+			<db:parameter-types>
                 <db:parameter-type key="appName" type="VARCHAR" />
                 <db:parameter-type key="operatingUserId" type="VARCHAR" />
             </db:parameter-types>

@@ -12,8 +12,8 @@
 		</ee:transform>
 		<try transactionalAction="ALWAYS_BEGIN" doc:name="Transactional">
             <db:stored-procedure config-ref="MSSQL_Database_Config" doc:name="CreateKpi">
-               <db:sql><![CDATA[{ CALL CreateKpi(:operatingUserId, :appName, :KpiType, :ModelLineName, :DateUtc, :Comments, :KpiId) }]]></db:sql>
-                <db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'ModelLineName' : vars.originalPayload.ModelLineName, 'DateUtc' : vars.originalPayload.UtcDate, 'Comments' : vars.originalPayload.Comment, 'KpiType' : vars.originalPayload.KpiType}]]]></db:input-parameters>
+                <db:sql ><![CDATA[${kpi.createKPI}]]></db:sql>
+				<db:input-parameters><![CDATA[#[{'operatingUserId' : vars.operatingUserId, 'appName' : vars.appName, 'ModelLineName' : vars.originalPayload.ModelLineName, 'DateUtc' : vars.originalPayload.UtcDate, 'Comments' : vars.originalPayload.Comment, 'KpiType' : vars.originalPayload.KpiType}]]]></db:input-parameters>
 				<db:output-parameters>
                     <db:output-parameter key="KpiId" type="INTEGER"/>
                 </db:output-parameters>
@@ -28,7 +28,7 @@
             </ee:variables>
         </ee:transform>
 
-        <ee:transform doc:name="Initialise audit info vars" doc:id="65dccf37-2f13-40db-b088-6897e1e3d758" >
+        <!-- <ee:transform doc:name="Initialise audit info vars" doc:id="65dccf37-2f13-40db-b088-6897e1e3d758" >
 			<ee:message >
 			</ee:message>
 			<ee:variables >
@@ -43,7 +43,7 @@
             <ee:variables>
 				<ee:set-variable resource="dwl/kpi/auditInfo.dwl" variableName="auditInfo" />
             </ee:variables>
-        </ee:transform>
+        </ee:transform> -->
 
     </flow>
 

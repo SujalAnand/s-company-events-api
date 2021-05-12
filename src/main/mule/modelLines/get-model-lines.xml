@@ -11,7 +11,7 @@
 			</ee:variables>
 		</ee:transform>
 		<db:stored-procedure doc:name="Call GetAllModelLines" doc:id="7f0a2d68-90ca-49f8-b18d-1a768450fcd0" config-ref="MSSQL_Database_Config">
-			<db:sql ><![CDATA[{ CALL GetAllModelLines(:operatingUserId, :appName) }]]></db:sql>
+			<db:sql ><![CDATA[${modelLines.getModelLines}]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{'appName' : vars.appName, 'operatingUserId' : vars.operatingUserId}]]]></db:input-parameters>
 		</db:stored-procedure>
         <ee:transform doc:name="Model Lines Response">

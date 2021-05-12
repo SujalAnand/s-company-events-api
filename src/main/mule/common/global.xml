@@ -10,6 +10,9 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
 	<db:config name="MSSQL_Database_Config" doc:name="MSSQL Database Config" doc:id="b2d8a9a7-9f8a-4d5f-8009-470882286cbc" >
 		<db:mssql-connection instanceName="${mssql.instance.name}" host="${mssql.host}" databaseName="${mssql.databaseName}">
+			<reconnection >
+				<reconnect frequency="${mssql.retry.frequency}" count="${mssql.retry.attempts}" />
+			</reconnection>
 			<db:connection-properties >
                           <db:connection-property key="integratedSecurity" value="true" />
              </db:connection-properties>
@@ -18,9 +21,55 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="f4fa5484-eef2-46f4-a163-7d73dccda2af" name="api-config" api="api\api.raml" />
 	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="a64653c7-845c-433f-9bdf-e5c3a4e27aa5" flowRef="api-main" />
 	<configuration-properties doc:name="Configuration properties" doc:id="29b9dcf4-bec4-4d2a-a8fc-cf3a8262b8d2" file="environments/${mule.env}.yaml" />
-	<vm:config name="VM_Config" doc:name="VM Config" doc:id="c066e7ac-8e71-416b-97c7-049980396eb0" >
-		<vm:queues >
-			<vm:queue queueName="logger" />
-		</vm:queues>
-	</vm:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="9129e55d-7d2e-4189-8c78-9745558204c8" file="common-config.yaml" />
+<!--     <flow name="loggingFlow">
+        <vm:listener doc:name="VM" queueName="logger" config-ref="VM_Config">
+        </vm:listener>
+
+        <logger message="LOG: #[vars.log_payload]" level="INFO" doc:name="Logger" />
+
+    </flow>
+
+    <sub-flow name="log:output">
+        <ee:transform doc:name="Set log_payload">
+           <ee:variables>
+				<ee:set-variable variableName="log_payload" ><![CDATA[%dw 2.0
+output application/json  
+-&#45;&#45;
+{
+  msg: "Output",
+  object: payload
+}]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <flow-ref name="loggingFlow" doc:name="loggingFlow" />
+    </sub-flow>
+
+    <sub-flow name="log:input">
+        <set-variable value="#[payload]" doc:name="Save Payload" doc:id="69b0afac-c2a0-4db6-b0a1-777ce0e77f2c" variableName="localPayload"/>
+		<ee:transform doc:name="Update Payload/initialise vars" doc:id="71ee6323-cf0b-482f-a3bb-e4db72a0c444" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[attributes]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="isPayloadNull" ><![CDATA[payload == null]]></ee:set-variable>
+				<ee:set-variable variableName="inProps" ><![CDATA[write(payload) as String]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<set-payload value="#[vars.localPayload]" doc:name="Recover Payload" doc:id="c660668b-9d2f-486e-8f84-cdce9cb59c0b" />
+		<ee:transform doc:name="Set log_payload" doc:id="763e8fc3-3e9f-4a42-b2c3-c35085009505">
+            
+            <ee:variables>
+                <ee:set-variable variableName="log_payload"><![CDATA[%dw 2.0
+output application/json  
+-&#45;&#45;
+{
+  msg: "Attributes/inbound properties",
+  object: vars.inProps,
+  (text: payload) if vars.isPayloadNull == false
+}]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <flow-ref name="loggingFlow" doc:name="loggingFlow" />
+    </sub-flow> -->
 </mule>
